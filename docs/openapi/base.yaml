@@ -1,0 +1,17 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  description: The API description and documentation
+  version: "1.0"
+  contact: {}
+tags:
+  - name: api
+    description: ""
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+      description: Enter JWT token

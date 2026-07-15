@@ -1,0 +1,11 @@
+paths:
+  /api/auth/logout:
+    post:
+      operationId: LogoutController_logout
+      summary: Logout the current user
+      parameters: []
+      responses:
+        "200":
+          description: User logged out successfully
+      tags:
+        - Auth

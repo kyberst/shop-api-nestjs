@@ -1,0 +1,93 @@
+paths:
+  /api/orders:
+    get:
+      operationId: FindAllOrdersController_findAll
+      summary: Get all orders with pagination and filtering
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            type: number
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Return paginated orders
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: number
+                  resultType:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Order"
+                      total:
+                        type: number
+      tags:
+        - Orders
+      security:
+        - bearer: []
+    post:
+      operationId: CreateOrderController_create
+      summary: Create a new order
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequestDto"
+      responses:
+        "201":
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      security:
+        - bearer: []
+  /api/orders/{id}/status:
+    patch:
+      operationId: UpdateOrderStatusController_updateStatus
+      summary: Update the status of an order
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOrderStatusRequestDto"
+      responses:
+        "200":
+          description: Order status updated successfully
+      tags:
+        - Orders
+      security:
+        - bearer: []

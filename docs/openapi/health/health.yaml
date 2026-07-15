@@ -1,0 +1,13 @@
+paths:
+  /api/health:
+    get:
+      operationId: HealthController_getHealth
+      summary: Check system health status
+      parameters: []
+      responses:
+        "200":
+          description: System is healthy
+        "503":
+          description: One or more services are offline
+      tags:
+        - System

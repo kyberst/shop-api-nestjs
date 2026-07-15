@@ -1,0 +1,404 @@
+components:
+  schemas:
+    LoginRequestDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: password123
+      required:
+        - email
+        - password
+    ErrorResponseDto:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        statusCode:
+          type: number
+          example: 400
+        resultType:
+          type: string
+          example: ERROR
+        message:
+          type: string
+          example: An error occurred
+        error:
+          type: object
+        data:
+          type: object
+      required:
+        - success
+        - statusCode
+        - resultType
+        - message
+    RegisterRequestDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: password123
+        name:
+          type: string
+          example: John Doe
+      required:
+        - email
+        - password
+        - name
+    ForgotPasswordRequestDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        newPassword:
+          type: string
+          example: newpassword123
+      required:
+        - email
+    PaymentItemRequestDto:
+      type: object
+      properties:
+        price:
+          type: number
+          example: 19.99
+        quantity:
+          type: number
+          example: 2
+      required:
+        - price
+        - quantity
+    CreatePaymentIntentRequestDto:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentItemRequestDto"
+      required:
+        - items
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+      required:
+        - id
+        - name
+    CreateCategoryRequestDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: cat123
+        name:
+          type: string
+          example: Electronics
+      required:
+        - name
+    CategoryResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+      required:
+        - id
+        - name
+    UpdateCategoryRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Updated Electronics
+      required:
+        - name
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        imageUrl:
+          type: string
+        rating:
+          type: number
+        moq:
+          type: number
+        supplierName:
+          type: string
+        supplierCountry:
+          type: string
+        isTradeAssurance:
+          type: boolean
+        isVerified:
+          type: boolean
+        isActive:
+          type: boolean
+      required:
+        - id
+        - name
+        - description
+        - price
+        - category
+        - imageUrl
+        - rating
+        - moq
+        - supplierName
+        - supplierCountry
+        - isTradeAssurance
+        - isVerified
+    CreateProductRequestDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        image:
+          type: string
+        categoryId:
+          type: string
+        sku:
+          type: string
+      required:
+        - name
+        - description
+        - price
+        - image
+        - categoryId
+        - sku
+    UpdateProductRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        image:
+          type: string
+        categoryId:
+          type: string
+        sku:
+          type: string
+        isActive:
+          type: boolean
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: number
+        imageUrl:
+          type: string
+      required:
+        - id
+        - name
+        - price
+        - quantity
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        customer:
+          type: string
+        customerEmail:
+          type: string
+        userId:
+          type: string
+        date:
+          type: string
+        total:
+          type: number
+        status:
+          type: string
+          enum:
+            - Pending
+            - Shipped
+            - Delivered
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+      required:
+        - id
+        - customer
+        - customerEmail
+        - userId
+        - date
+        - total
+        - status
+        - items
+    CreateOrderItemRequestDto:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: prod123
+        quantity:
+          type: number
+          example: 2
+        price:
+          type: number
+          example: 19.99
+        name:
+          type: string
+          example: Product Name
+        imageUrl:
+          type: string
+          example: https://example.com/image.jpg
+      required:
+        - productId
+        - quantity
+        - price
+    CreateOrderRequestDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: order123
+        userId:
+          type: string
+          example: user123
+        customer:
+          type: string
+          example: John Doe
+        customerEmail:
+          type: string
+          example: user@example.com
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreateOrderItemRequestDto"
+        total:
+          type: number
+          example: 39.98
+        shippingAddress:
+          type: string
+          example: 123 Main St, Anytown, USA
+      required:
+        - userId
+        - items
+        - total
+        - shippingAddress
+    UpdateOrderStatusRequestDto:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - Pending
+            - Shipped
+            - Delivered
+          example: Shipped
+      required:
+        - status
+    UpdateUserRoleRequestDto:
+      type: object
+      properties:
+        role:
+          type: string
+          description: The new role for the user
+          enum:
+            - admin
+            - sales
+            - user
+      required:
+        - role
+    AiChatDto:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Hello, how are you?
+      required:
+        - message
+    PermissionUpdateItemRequestDto:
+      type: object
+      properties:
+        menuKey:
+          type: string
+        canView:
+          type: boolean
+        canEdit:
+          type: boolean
+        canDelete:
+          type: boolean
+      required:
+        - menuKey
+        - canView
+        - canEdit
+        - canDelete
+    UpdateRolePermissionsRequestDto:
+      type: object
+      properties:
+        role:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PermissionUpdateItemRequestDto"
+      required:
+        - role
+        - permissions

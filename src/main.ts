@@ -1,0 +1,93 @@
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import { AppModule } from './app.module';
+import { MonitoringLoggerService } from './infrastructure/services/monitoring/monitoring-logger.service';
+import { AjvValidationPipe } from './api/pipes/ajv-validation.pipe';
+import { ApiResponseInterceptor } from './api/interceptors/api-response.interceptor';
+import { HttpExceptionFilter } from './api/filters/http-exception.filter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as fs from 'fs';
+import * as path from 'path';
+import { OpenApiLoader } from './infrastructure/services/openapi/openapi-loader';
+
+async function bootstrap() {
+  const criticalEnvVars = ['JWT_SECRET', 'DATABASE_URL', 'MONGO_URI', 'GEMINI_API_KEY'];
+  const missingEnvVars = criticalEnvVars.filter(
+    (envVar) => !process.env[envVar] || process.env[envVar].trim() === '' || process.env[envVar] === 'undefined'
+  );
+
+  if (missingEnvVars.length > 0) {
+    console.error('\n================================================================');
+    console.error('❌ BOOTSTRAP FAILURE: Missing Critical Environment Variables!');
+    console.error('The following critical environment variable(s) must be defined:');
+    missingEnvVars.forEach((envVar) => console.error(`  - ${envVar}`));
+    console.error('Please configure them in your environment settings or .env file.');
+    console.error('================================================================\n');
+    process.exit(1);
+  }
+
+  const isProduction = process.env.NODE_ENV === 'production';
+  const port = isProduction ? 3000 : 3001;
+  
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bufferLogs: true,
+  });
+  
+  const logger = app.get(MonitoringLoggerService);
+  app.useLogger(logger);
+  
+  // Trust the reverse proxy
+  app.set('trust proxy', 1);
+  
+  // Security Middlewares
+  app.use(helmet());
+  app.use(cookieParser());
+  
+  // Enable CORS with restricted options
+  app.enableCors({
+    origin: true, // In development, true allows everything, in production we should list allowed origins
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Authorization, Content-Type',
+  });
+  
+  // Global prefix
+  app.setGlobalPrefix('api');
+  
+  // Swagger setup
+  const openapiDocsDir = path.resolve(__dirname, '..', '..', 'docs', 'openapi');
+  const document = OpenApiLoader.load(openapiDocsDir);
+
+  if (Object.keys(document).length > 0) {
+    SwaggerModule.setup('docs', app, document);
+    logger.log(`[Swagger] OpenAPI documentation loaded and merged from ${openapiDocsDir}`);
+  } else {
+    // Fallback or empty document if no files found
+    const config = new DocumentBuilder()
+      .setTitle('API Documentation')
+      .setDescription('The API description and documentation')
+      .setVersion('1.0')
+      .build();
+    const fallbackDocument = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('docs', app, fallbackDocument);
+    logger.warn(`[Swagger] No OpenAPI fragments found at ${openapiDocsDir}, using empty document`);
+  }
+
+  // Register global interceptor and exception filter
+  app.useGlobalInterceptors(new ApiResponseInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter(logger));
+  
+  // AJV Validation Pipe
+  app.useGlobalPipes(new AjvValidationPipe());
+  
+  await app.listen(port, '0.0.0.0');
+  console.log('──────────────────────────────────────────');
+  console.log('  Server:    http://localhost:' + port + '/api');
+  console.log('  Swagger:   http://localhost:' + port + '/docs');
+  console.log('──────────────────────────────────────────');
+  logger.log(`[NestJS] Backend running on port ${port} (isProduction: ${isProduction})`);
+}
+
+bootstrap();

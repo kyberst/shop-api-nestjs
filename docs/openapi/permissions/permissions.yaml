@@ -1,0 +1,66 @@
+paths:
+  /api/role-permissions:
+    get:
+      operationId: RolePermissionsController_findAll
+      summary: Get all role permissions
+      parameters: []
+      responses:
+        "200":
+          description: List of role permissions
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+      tags:
+        - Permissions
+      security:
+        - bearer: []
+    patch:
+      operationId: RolePermissionsController_update
+      summary: Update role permissions
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRolePermissionsRequestDto"
+      responses:
+        "200":
+          description: Permissions updated successfully
+        "400":
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+      tags:
+        - Permissions
+      security:
+        - bearer: []

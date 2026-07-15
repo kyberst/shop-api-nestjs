@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  role      String?  @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String
+  isActive Boolean   @default(true)
+  products Product[]
+}
+
+model Product {
+  id               String   @id @default(uuid())
+  name             String
+  description      String
+  price            Float
+  categoryId       String
+  category         Category @relation(fields: [categoryId], references: [id])
+  imageUrl         String
+  rating           Float
+  moq              Int
+  supplierName     String
+  supplierCountry  String
+  isTradeAssurance Boolean
+  isVerified       Boolean
+  isActive         Boolean  @default(true)
+}
+
+model Order {
+  id         String   @id @default(uuid())
+  product    String
+  customer   String
+  date       String
+  amount     Float
+  status     String
+  avatar     String
+}
+
+model RolePermission {
+  id        String   @id @default(uuid())
+  role      String   // admin, sales, user
+  menuKey   String   // dashboard, products, categories, orders, users, ai-assistant
+  canView   Boolean  @default(false)
+  canEdit   Boolean  @default(false)
+  canDelete Boolean  @default(false)
+
+  @@unique([role, menuKey])
+}

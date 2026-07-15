@@ -1,0 +1,12 @@
+
+export class CategoryResponseDto {
+  id!: string;
+
+  createdAt?: Date;
+
+  updatedAt?: Date;
+
+  name!: string;
+
+  isActive?: boolean;
+}

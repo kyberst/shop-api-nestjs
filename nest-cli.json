@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schematic.tools/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "assets": ["**/*.md", "**/*.sql"],
+    "watchAssets": true
+  }
+}

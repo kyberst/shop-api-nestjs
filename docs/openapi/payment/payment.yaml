@@ -1,0 +1,17 @@
+paths:
+  /api/create-payment-intent:
+    post:
+      operationId: CreatePaymentIntentController_createPaymentIntent
+      summary: Create a payment intent for Stripe
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaymentIntentRequestDto"
+      responses:
+        "200":
+          description: Payment intent created successfully
+      tags:
+        - Payment
