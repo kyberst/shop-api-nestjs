@@ -1,8 +1,8 @@
 import { Module, Global } from '@nestjs/common';
-import { PersistenceService } from '../persistence/persistence.service';
-import { PrismaService } from '../persistence/prisma.service';
-import { MongooseService } from '../persistence/mongoose.service';
-import { allInfrastructureProviders, persistenceTokens } from '../dependency-injection';
+import { PersistenceService } from '@/infrastructure/persistence/persistence.service';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
+import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
+import { allInfrastructureProviders, persistenceTokens } from '@/infrastructure/dependency-injection';
 
 @Global()
 @Module({

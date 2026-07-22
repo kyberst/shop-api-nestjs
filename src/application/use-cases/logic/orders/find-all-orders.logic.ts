@@ -1,10 +1,11 @@
 import { OrderRepository } from '@/domain/repositories/order.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { OrderResultCode } from '@/application/constants/result-codes/order-result-codes';
-import { OrderQueryOptions } from '@/domain/repositories/order.repository';
+import { OrderQueryOptions } from '@/domain/interfaces/order-query-options.interface';
 import { PaginatedData } from '@/domain/types/paginated-data';
 import { RequestUser } from '@/shared/types/auth.interface';
 import { OrderResponseDto } from '@/application/dtos/response/orders/order.response.dto';
+import { OrderMapper } from '@/application/mappers/order.mapper';
 
 /**
  * Logic to find all orders with filters and pagination.
@@ -23,22 +24,7 @@ export const findAllOrdersLogic = async (
 
   const ordersResult = await orderRepository.findAll(finalOptions);
   
-  const mappedData: OrderResponseDto[] = ordersResult.items.map(order => ({
-    id: order.id,
-    customer: order.customer,
-    customerEmail: order.customerEmail,
-    date: order.createdAt?.toISOString() || new Date().toISOString(),
-    total: order.total,
-    status: order.status,
-    userId: order.userId,
-    items: order.items.map(item => ({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      imageUrl: item.imageUrl
-    }))
-  }));
+  const mappedData = OrderMapper.toResponseList(ordersResult.items);
 
   const paginatedDto: PaginatedData<OrderResponseDto> = {
     items: mappedData,

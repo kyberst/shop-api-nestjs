@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { CategoryRepository } from '@/domain/repositories/category.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { IRequestHandler } from '@/application/mediator/interfaces';
@@ -7,7 +6,7 @@ import { RemoveCategoryCommand } from '@/application/use-cases/commands/categori
 import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.interface';
 import { removeCategoryLogic } from '@/application/use-cases/logic/categories/remove-category.logic';
 
-@Injectable()
+
 @RequestHandler(RemoveCategoryCommand)
 export class RemoveCategoryHandler implements IRequestHandler<RemoveCategoryCommand, ApiResult> {
   constructor(

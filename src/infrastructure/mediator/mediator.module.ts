@@ -1,7 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Mediator } from './mediator.service';
-import { MEDIATOR_BEHAVIORS, IMediator } from '../../application/mediator/interfaces';
+import { MEDIATOR_BEHAVIORS, IMediator } from '@/application/mediator/interfaces';
 
 @Global()
 @Module({

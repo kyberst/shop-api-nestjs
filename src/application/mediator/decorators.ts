@@ -1,4 +1,4 @@
-import { SetMetadata } from '@nestjs/common';
+import { Type } from '@nestjs/common';
 
 export const REQUEST_HANDLER_METADATA = 'REQUEST_HANDLER_METADATA';
 
@@ -7,12 +7,13 @@ export const REQUEST_HANDLER_METADATA = 'REQUEST_HANDLER_METADATA';
  *
  * @param requestClass The class representing the Request/Command/Query
  */
-export function RequestHandler(requestClass: any) {
-  return (target: any) => {
-    // 1. Set standard NestJS metadata for custom mediator
-    SetMetadata(REQUEST_HANDLER_METADATA, requestClass)(target);
+export function RequestHandler(requestClass: Type<unknown>) {
+  return (target: Type<unknown>) => {
+    // 1. Set metadata for custom mediator using standard Reflect API
+    Reflect.defineMetadata(REQUEST_HANDLER_METADATA, requestClass, target);
 
     // 2. Map command/query to @nestjs/cqrs handlers based on name
+    // These metadata keys are what @nestjs/cqrs looks for
     const isQuery = requestClass.name.endsWith('Query');
     if (isQuery) {
       if (!Reflect.hasOwnMetadata('__query__', requestClass)) {

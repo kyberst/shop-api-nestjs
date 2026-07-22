@@ -1,5 +1,5 @@
-import { AppException } from '../errors/app-exception';
-import { IApiResponse } from '../types/api-result';
+import { AppException } from '@/shared/errors/app-exception';
+import { IApiResponse } from '@/shared/types/api-result';
 
 export interface FrameworkExceptionMap {
   status?: number;

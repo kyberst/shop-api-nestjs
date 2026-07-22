@@ -11,7 +11,7 @@ import { generateContentLogic } from './logic/generate-content.logic';
 @Injectable()
 export class GeminiAiService extends AiService {
   private ai: GoogleGenAI | null = null;
-  private readonly defaultModel = 'gemini-2.5-flash';
+  private readonly defaultModel = 'gemini-3.5-flash';
 
   private getClient(): GoogleGenAI {
     this.ai = getClientLogic(this.ai);

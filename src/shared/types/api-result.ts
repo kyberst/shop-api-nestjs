@@ -1,6 +1,6 @@
 import { HttpStatus } from './http-status';
 import { ResultInfo } from './result-info';
-import { IApiResponse } from '../interfaces/api/api-response.interface';
+import { IApiResponse } from '@/shared/interfaces/api/api-response.interface';
 
 export { IApiResponse };
 

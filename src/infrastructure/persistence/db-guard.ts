@@ -1,4 +1,4 @@
-import { Result, ok, err } from '../../shared/types/result';
+import { Result, ok, err } from '@/shared/types/result';
 
 /**
  * Utility to avoid repeating "if(isConnected())" everywhere.
@@ -12,8 +12,9 @@ export const dbGuard = async <T>(
     try {
       const data = await action();
       return ok(data);
-    } catch (error: any) {
-      return err(new Error(error?.message || 'Database operation failed'));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : (typeof error === 'object' && error !== null && 'message' in error ? String((error as any).message) : String(error));
+      return err(new Error(message || 'Database operation failed'));
     }
   }
   return err(new Error('Database service is offline or unavailable'));

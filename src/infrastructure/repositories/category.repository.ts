@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CategoryRepository as DomainCategoryRepository } from '@/domain/repositories/category.repository';
-import { Category } from '../../domain/entities/category.entity';
+import { Category } from '@/domain/entities/category.entity';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { PrismaService } from '../persistence/prisma.service';
-import { MongooseService } from '../persistence/mongoose.service';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
+import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
 import { findAllCategoriesLogic } from './category/find-all.read';
 import { saveCategoryLogic } from './category/save';
 import { updateCategoryLogic } from './category/update';

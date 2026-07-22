@@ -1,8 +1,8 @@
 import * as jwt from 'jsonwebtoken';
 import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
-import { RequestUser } from '../types/auth.interface';
-import { AppException } from '../errors/app-exception';
-import { ResultInfo } from '../types/result-info';
+import { RequestUser } from '@/shared/types/auth.interface';
+import { AppException } from '@/shared/errors/app-exception';
+import { ResultInfo } from '@/shared/types/result-info';
 
 export const extractToken = (authHeader?: string, cookies?: Record<string, any>, cookieName: string = 'auth_token'): string | undefined => {
   let token: string | undefined;

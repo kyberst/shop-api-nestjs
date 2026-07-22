@@ -12,40 +12,41 @@ export const generateContentLogic = async (
   config: AiGenerationConfig,
   tools?: AiTool[]
 ): Promise<AiResponse> => {
-  const geminiConfig: any = {
-    systemInstruction: config.systemInstruction,
-    temperature: config.temperature,
-    responseMimeType: config.responseMimeType,
-    responseSchema: config.responseSchema,
-  };
+  const interaction = await aiClient.interactions.create({
+    model,
+    input: messages.map(m => m.content).join('\n'),
+    system_instruction: config.systemInstruction,
+    generation_config: {
+      temperature: config.temperature,
+    },
+    tools: tools?.map(t => ({
+      type: 'function' as const,
+      name: t.name,
+      description: t.description,
+      parameters: t.parameters as any,
+    })),
+  });
 
-  if (tools && tools.length > 0) {
-    geminiConfig.tools = [{
-      functionDeclarations: tools.map(t => ({
-        name: t.name,
-        description: t.description,
-        parameters: t.parameters ? mapParametersLogic(t.parameters) : undefined,
-      })),
-    }];
+  let fullOutput = '';
+  const functionCalls: any[] = [];
+
+  for (const step of interaction.steps) {
+    if (step.type === 'model_output') {
+      const textContent = step.content?.find(c => c.type === 'text');
+      if (textContent && textContent.text) {
+        fullOutput += textContent.text;
+      }
+    } else if (step.type === 'function_call') {
+      functionCalls.push({
+        name: step.name,
+        args: step.arguments,
+      });
+    }
   }
 
-  const contents = messages.map(m => ({
-    role: m.role === 'function' ? 'user' : (m.role === 'model' ? 'model' : 'user'),
-    parts: [{ text: m.content }],
-  }));
-
-  const response = await aiClient.models.generateContent({
-    model,
-    contents,
-    config: geminiConfig,
-  } as any);
-
   return {
-    message: response.text,
-    functionCalls: response.functionCalls?.map((fc: any) => ({
-      name: fc.name,
-      args: fc.args,
-    })),
-    rawText: response.text,
+    message: fullOutput,
+    functionCalls: functionCalls.length > 0 ? functionCalls : undefined,
+    rawText: fullOutput,
   };
 };

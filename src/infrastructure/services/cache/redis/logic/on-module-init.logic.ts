@@ -17,8 +17,9 @@ export const onModuleInitLogic = (logger: Logger): Redis | undefined => {
     client.on('error', (err) => logger.error(`Redis client error: ${err.message}`));
     
     return client;
-  } catch (error: any) {
-    logger.error(`Failed to initialize Redis: ${error.message}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    logger.error(`Failed to initialize Redis: ${message}`);
     return undefined;
   }
 };

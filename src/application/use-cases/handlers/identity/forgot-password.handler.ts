@@ -1,4 +1,3 @@
-import { Injectable, Inject } from '@nestjs/common';
 import { UserRepository } from '@/domain/repositories/user.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { IRequestHandler } from '@/application/mediator/interfaces';
@@ -7,12 +6,10 @@ import { ForgotPasswordCommand } from '@/application/use-cases/commands/identity
 import { IHashService } from '@/application/interfaces/security/security.interface';
 import { forgotPasswordLogic } from '@/application/use-cases/logic/identity/forgot-password.logic';
 
-@Injectable()
 @RequestHandler(ForgotPasswordCommand)
 export class ForgotPasswordHandler implements IRequestHandler<ForgotPasswordCommand, ApiResult> {
   constructor(
     private readonly userRepository: UserRepository,
-    @Inject(IHashService)
     private readonly hashService: IHashService,
   ) {}
 

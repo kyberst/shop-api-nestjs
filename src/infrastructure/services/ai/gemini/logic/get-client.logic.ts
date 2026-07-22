@@ -8,12 +8,6 @@ export const getClientLogic = (currentAi: GoogleGenAI | null): GoogleGenAI => {
   if (!apiKey) {
     throw new AppException(ResultInfo.InternalError('AI Assistant key is not configured in the secrets dashboard. Please add GEMINI_API_KEY in Settings.'));
   }
-  return new GoogleGenAI({
-    apiKey,
-    httpOptions: {
-      headers: {
-        'User-Agent': 'aistudio-build',
-      },
-    },
-  });
+  const ai = new GoogleGenAI({ apiKey });
+  return ai;
 };

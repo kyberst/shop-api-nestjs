@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { MongooseService } from './mongoose.service';
+import { LoggerService } from '@/domain/services/logger.service';
 import { performCategorySeeding } from './logic/seed-categories';
 import { performProductSeeding } from './logic/seed-products';
 import { performOrderSeeding } from './logic/seed-orders';
@@ -14,6 +15,7 @@ export class PersistenceService implements OnModuleInit {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mongoose: MongooseService,
+    private readonly logger: LoggerService,
   ) {}
 
   private async waitForConnections(timeoutMs = 3000, intervalMs = 100): Promise<{ prisma: boolean; mongoose: boolean }> {
@@ -37,39 +39,39 @@ export class PersistenceService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    console.log('PersistenceService initializing...');
+    this.logger.log('PersistenceService initializing...', 'PersistenceService');
     
     // Wait for asynchronous database connections to resolve
     const { prisma: prismaConnected, mongoose: mongooseConnected } = await this.waitForConnections();
     
     if (prismaConnected) {
-      console.log('Prisma connected. Proceeding with migrations and seeds...');
+      this.logger.log('Prisma connected. Proceeding with migrations and seeds...', 'PersistenceService');
       await this.applyMigrations();
       await this.seedAll();
     } else {
-      console.warn('Prisma connection timed out. Skipping migrations and seeds.');
+      this.logger.warn('Prisma connection timed out. Skipping migrations and seeds.', 'PersistenceService');
     }
   }
 
   private async applyMigrations() {
     await dbGuard(this.prisma, async () => {
-      console.log('Starting modular migrations...');
-      await runModularMigrations(this.prisma);
+      this.logger.log('Starting modular migrations...', 'PersistenceService');
+      await runModularMigrations(this.prisma, this.logger);
     });
   }
 
   private async seedAll() {
     await dbGuard(this.prisma, async () => {
-      console.log('Running persistence seeding...');
+      this.logger.log('Running persistence seeding...', 'PersistenceService');
       const mongooseConnected = this.mongoose.isConnected();
       
-      await performCategorySeeding(this.prisma, mongooseConnected);
-      await performProductSeeding(this.prisma, mongooseConnected);
-      await performOrderSeeding(this.prisma, mongooseConnected);
-      await performUserSeeding(this.prisma);
-      await performPermissionSeeding(this.prisma, mongooseConnected);
+      await performCategorySeeding(this.prisma, mongooseConnected, this.logger);
+      await performProductSeeding(this.prisma, mongooseConnected, this.logger);
+      await performOrderSeeding(this.prisma, mongooseConnected, this.logger);
+      await performUserSeeding(this.prisma, this.logger);
+      await performPermissionSeeding(this.prisma, mongooseConnected, this.logger);
       
-      console.log('Seeding completed successfully.');
+      this.logger.log('Seeding completed successfully.', 'PersistenceService');
     });
   }
 }

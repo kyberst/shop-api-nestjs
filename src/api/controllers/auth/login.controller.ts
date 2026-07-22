@@ -1,16 +1,16 @@
-import { Controller, Post, Body, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Body, UseInterceptors, Inject } from '@nestjs/common';
 import { LoginRequestDto } from '@/application/dtos/request/identity/login.request.dto';
 import { ApiResult } from '@/shared/types/api-result';
-import { Mediator } from '@/infrastructure/mediator/mediator.service';
+import { IMediator } from '@/application/mediator/interfaces';
 import { LoginCommand } from '@/application/use-cases/commands/identity/login.command';
-import { AuthCookieInterceptor } from '../../interceptors/auth-cookie.interceptor';
+import { AuthCookieInterceptor } from '@/api/interceptors/auth-cookie.interceptor';
 import { LoginResponseDto } from '@/application/dtos/response/identity/login.response.dto';
 
 @Controller('auth')
 @UseInterceptors(AuthCookieInterceptor)
 export class LoginController {
   constructor(
-    private readonly mediator: Mediator,
+    @Inject(IMediator) private readonly mediator: IMediator,
   ) {}
 
   @Post('login')

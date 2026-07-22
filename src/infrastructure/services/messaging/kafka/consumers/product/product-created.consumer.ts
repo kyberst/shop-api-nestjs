@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { MongoProduct } from '@/infrastructure/persistence/mongo/product.model';
-import { KafkaConsumerService } from '../../kafka.consumer.service';
+import { KafkaConsumerService } from '@/infrastructure/services/messaging/kafka/kafka.consumer.service';
 
 @Injectable()
 export class ProductCreatedConsumer implements OnModuleInit {
@@ -19,7 +19,7 @@ export class ProductCreatedConsumer implements OnModuleInit {
           name: value.name,
           description: value.description,
           price: value.price,
-          categoryId: value.categoryId || 'General',
+          categoryId: value.categoryId && value.categoryId !== 'General' ? value.categoryId : 'f2f75ef3-7032-4ca3-be30-5899478f6575',
           imageUrl: value.imageUrl,
           rating: value.rating,
           moq: value.moq,

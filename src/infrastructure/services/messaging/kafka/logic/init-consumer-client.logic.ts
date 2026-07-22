@@ -10,13 +10,13 @@ export const initConsumerClientLogic = (logger: LoggerService): Kafka | undefine
       process.env.KAFKA_BROKER.trim() === '' ||
       !process.env.KAFKA_USER || 
       !process.env.KAFKA_PASSWORD) {
-    logger.warn('Kafka environment variables are missing or invalid. Kafka consumer will be disabled.');
+    logger.log('Kafka environment variables are missing or invalid. Kafka consumer will be disabled.');
     return undefined;
   }
 
   const brokers = parseBrokersLogic(process.env.KAFKA_BROKER);
   if (brokers.length === 0) {
-    logger.warn('Kafka brokers list is empty. Kafka consumer will be disabled.');
+    logger.log('Kafka brokers list is empty. Kafka consumer will be disabled.');
     return undefined;
   }
 
@@ -24,7 +24,7 @@ export const initConsumerClientLogic = (logger: LoggerService): Kafka | undefine
     const kafka = new Kafka({
       clientId: process.env.KAFKA_CLIENT_ID || 'ecommerce-app',
       brokers,
-      ssl: { rejectUnauthorized: false },
+      ssl: true,
       sasl: {
         mechanism: 'scram-sha-256',
         username: process.env.KAFKA_USER,

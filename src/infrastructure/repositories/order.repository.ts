@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { OrderRepository as DomainOrderRepository } from '@/domain/repositories/order.repository';
-import { Order } from '../../domain/entities/order.entity';
+import { Order } from '@/domain/entities/order.entity';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { PrismaService } from '../persistence/prisma.service';
-import { MongooseService } from '../persistence/mongoose.service';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
+import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
 import { findAllOrdersLogic } from './order/find-all.read';
 import { saveOrderLogic } from './order/save';
 import { updateOrderStatusLogic } from './order/update-status';
 
-import { OrderQueryOptions } from '@/domain/repositories/order.repository';
+import { OrderQueryOptions } from '@/domain/interfaces/order-query-options.interface';
 
 @Injectable()
 export class OrderRepository extends DomainOrderRepository {

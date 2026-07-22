@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { OrderRepository } from '@/domain/repositories/order.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { IRequestHandler } from '@/application/mediator/interfaces';
@@ -8,7 +7,7 @@ import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.inte
 import { OrderResponseDto } from '@/application/dtos/response/orders/order.response.dto';
 import { createOrderLogic } from '@/application/use-cases/logic/orders/create-order.logic';
 
-@Injectable()
+
 @RequestHandler(CreateOrderCommand)
 export class CreateOrderHandler implements IRequestHandler<CreateOrderCommand, ApiResult<OrderResponseDto>> {
   constructor(
@@ -17,6 +16,10 @@ export class CreateOrderHandler implements IRequestHandler<CreateOrderCommand, A
   ) {}
 
   async handle(command: CreateOrderCommand): Promise<ApiResult<OrderResponseDto>> {
-      return await createOrderLogic(this.orderRepository, command.dto);
+      const result = await createOrderLogic(this.orderRepository, command.dto);
+      if (result.success && result.data) {
+        await this.messageBroker.send('order-created', result.data);
+      }
+      return result;
   }
 }

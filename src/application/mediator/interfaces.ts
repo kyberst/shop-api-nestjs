@@ -1,7 +1,7 @@
 /**
  * Represents a request that returns a response of type TResponse.
  */
-export abstract class IRequest<TResponse = any> {
+export abstract class IRequest<TResponse = unknown> {
   declare readonly _responseType?: TResponse;
 }
 
@@ -16,7 +16,7 @@ export interface IRequestHandler<TRequest extends IRequest<TResponse>, TResponse
  * Represents a middleware/pipeline behavior that wraps the execution of request handlers.
  */
 export interface IPipelineBehavior {
-  handle(request: any, next: () => Promise<any>): Promise<any>;
+  handle(request: unknown, next: () => Promise<unknown>): Promise<unknown>;
 }
 
 /**

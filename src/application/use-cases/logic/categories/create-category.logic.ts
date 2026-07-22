@@ -6,6 +6,7 @@ import { CategoryResultCode } from '@/application/constants/result-codes/categor
 import { CreateCategoryRequestDto } from '@/application/dtos/request/categories/create-category.request.dto';
 import { CategoryResponseDto } from '@/application/dtos/response/categories/category.response.dto';
 import { Category } from '@/domain/entities/category.entity';
+import { CategoryMapper } from '@/application/mappers/category.mapper';
 
 /**
  * Logic to create a category with complex business rules.
@@ -21,13 +22,8 @@ export async function createCategoryLogic(
 
   // RULE 2: Check for existing category
   const existingCategory = await repository.findByName(dto.name);
-  
-  // RULE 3: Only admins can create duplicate names (Simulated)
   if (existingCategory) {
-    const userRole = 'user'; // This would come from an Auth service context in real life
-    if ((userRole as string) !== 'admin') {
-      return ApiResult.FromInfo(CategoryResultCode.CATEGORY_NAME_DUPLICATED);
-    }
+    return ApiResult.FromInfo(CategoryResultCode.CATEGORY_NAME_DUPLICATED);
   }
 
   const category: Category = {
@@ -38,13 +34,5 @@ export async function createCategoryLogic(
 
   await repository.save(category);
 
-  const categoryResponse: CategoryResponseDto = {
-    id: category.id,
-    name: category.name,
-    isActive: category.isActive,
-    createdAt: category.createdAt,
-    updatedAt: category.updatedAt
-  };
-
-  return ApiResult.FromInfo(CategoryResultCode.CATEGORY_CREATED, categoryResponse);
+  return ApiResult.FromInfo(CategoryResultCode.CATEGORY_CREATED, CategoryMapper.toResponse(category));
 }

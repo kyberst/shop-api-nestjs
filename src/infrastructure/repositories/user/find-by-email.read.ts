@@ -1,9 +1,8 @@
 import { User } from '@/domain/entities/user.entity';
-import { MongooseService } from '../../persistence/mongoose.service';
-import { dbGuard } from '../../persistence/db-guard';
+import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
+import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { AppException } from '@/shared/errors/app-exception';
 import { IdentityResultCode } from '@/application/constants/result-codes/identity-result-codes';
-import { toDomainUser } from './map/to-domain-user.map';
 
 /**
  * Fragmented logic to find a user by email for read-only operations.
@@ -30,7 +29,7 @@ export const findUserByEmailReadLogic = async (
   }
 
   if (result.value) {
-    return toDomainUser(result.value);
+    return result.value as User;
   }
 
   return null;

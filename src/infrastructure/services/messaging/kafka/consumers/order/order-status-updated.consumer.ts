@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, Logger, Inject } from '@nestjs/common';
 import { MongoOrder } from '@/infrastructure/persistence/mongo/order.model';
-import { KafkaConsumerService } from '../../kafka.consumer.service';
+import { KafkaConsumerService } from '@/infrastructure/services/messaging/kafka/kafka.consumer.service';
 import { INotificationService } from '@/domain/services/notification.service';
 
 @Injectable()

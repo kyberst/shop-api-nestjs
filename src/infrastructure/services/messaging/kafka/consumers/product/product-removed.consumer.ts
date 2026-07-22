@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { MongoProduct } from '@/infrastructure/persistence/mongo/product.model';
-import { KafkaConsumerService } from '../../kafka.consumer.service';
+import { KafkaConsumerService } from '@/infrastructure/services/messaging/kafka/kafka.consumer.service';
 
 @Injectable()
 export class ProductRemovedConsumer implements OnModuleInit {

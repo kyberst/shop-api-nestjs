@@ -1,12 +1,5 @@
 import { OrderStatus } from '@/shared/enums/orders/order-status.enum';
-
-export interface OrderItemResponseDto {
-  id?: string;
-  name: string;
-  price: number;
-  quantity: number;
-  imageUrl?: string;
-}
+import { OrderItemResponseDto } from './order-item.response.dto';
 
 export interface OrderResponseDto {
   id: string;

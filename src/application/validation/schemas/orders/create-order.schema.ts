@@ -15,7 +15,7 @@ export const createOrderSchema: JSONSchemaType<CreateOrderRequestDto> = {
       items: {
         type: 'object',
         properties: {
-          productId: { type: 'string', format: 'uuid' },
+          productId: { type: 'string' },
           quantity: { type: 'integer', minimum: 1 },
           price: { type: 'number', minimum: 0.01 },
           name: { type: 'string', nullable: true },

@@ -1,5 +1,5 @@
-import { Controller, Get, Patch, Body, UseGuards } from '@nestjs/common';
-import { Mediator } from '@/infrastructure/mediator/mediator.service';
+import { Controller, Get, Patch, Body, UseGuards, Inject } from '@nestjs/common';
+import { IMediator } from '@/application/mediator/interfaces';
 import { UpdateRolePermissionsRequestDto } from '@/application/dtos/request/permissions/update-role-permissions.request.dto';
 import { RolePermissionResponseDto } from '@/application/dtos/response/permissions/role-permission.response.dto';
 import { AuthGuard } from '@/api/guards/auth.guard';
@@ -13,7 +13,7 @@ import { ApiResult } from '@/shared/types/api-result';
 @UseGuards(AuthGuard)
 export class RolePermissionsController {
   constructor(
-    private readonly mediator: Mediator,
+    @Inject(IMediator) private readonly mediator: IMediator,
   ) {}
 
   @Get()

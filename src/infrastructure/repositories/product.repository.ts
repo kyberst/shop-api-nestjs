@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ProductRepository as DomainProductRepository } from '@/domain/repositories/product.repository';
-import { Product } from '../../domain/entities/product.entity';
+import { Product } from '@/domain/entities/product.entity';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { PrismaService } from '../persistence/prisma.service';
-import { MongooseService } from '../persistence/mongoose.service';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
+import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
 import { findAllProductsLogic } from './product/find-all.read';
+import { findProductByIdLogic } from './product/find-by-id';
 import { saveProductLogic } from './product/save';
 import { updateProductLogic } from './product/update';
 import { deleteProductLogic } from './product/delete';
 import { findProductByNameLogic } from './product/find-by-name.internal';
 
-import { ProductQueryOptions } from '@/domain/repositories/product.repository';
+import { ProductQueryOptions } from '@/domain/interfaces/product-query-options.interface';
 
 @Injectable()
 export class ProductRepository extends DomainProductRepository {
@@ -23,6 +24,10 @@ export class ProductRepository extends DomainProductRepository {
 
   async findAll(options?: ProductQueryOptions): Promise<{ items: Product[]; total: number }> {
     return findAllProductsLogic(this.mongoose, options);
+  }
+
+  async findById(id: string): Promise<Product | null> {
+    return findProductByIdLogic(this.prisma, id);
   }
 
   async findByName(name: string): Promise<Product | null> {

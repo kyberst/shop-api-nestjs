@@ -2,7 +2,7 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Response } from 'express';
-import { handleAuthCookieFromResult } from '../utils/cookie.util';
+import { handleAuthCookieFromResult } from '@/api/utils/cookie.util';
 
 @Injectable()
 export class AuthCookieInterceptor implements NestInterceptor {

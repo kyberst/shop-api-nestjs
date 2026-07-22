@@ -1,22 +1,42 @@
-import { PrismaService } from '../prisma.service';
-import { MongoCategory } from '../mongo/category.model';
-import { seedCategories } from '../seeds/categories.seed';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
+import { MongoCategory } from '@/infrastructure/persistence/mongo/category.model';
+import { seedCategories } from '@/infrastructure/persistence/seeds/categories.seed';
+import { SeedTracker } from './seed-tracker';
+import { LoggerService } from '@/domain/services/logger.service';
 
-export const performCategorySeeding = async (prisma: PrismaService, mongooseConnected: boolean) => {
-  if (mongooseConnected) {
-    console.log('Clearing and seeding MongoDB categories...');
-    await MongoCategory.deleteMany({});
-    await MongoCategory.insertMany(seedCategories);
+export const performCategorySeeding = async (
+  prisma: PrismaService,
+  mongooseConnected: boolean,
+  logger: LoggerService,
+) => {
+  const hash = SeedTracker.getHash(seedCategories);
+  const shouldSeed = await SeedTracker.shouldSeed(prisma, 'categories', hash);
+
+  if (!shouldSeed) {
+    logger.log('Categories seed has not changed. Skipping Category seeding.', 'CategorySeed');
+    return;
   }
 
-  console.log('Clearing MySQL categories and cascading products...');
-  await prisma.product.deleteMany({});
-  await prisma.category.deleteMany({});
+  logger.log('Seeding/Updating categories (changes detected)...', 'CategorySeed');
 
-  console.log('Seeding MySQL categories...');
+  if (mongooseConnected) {
+    for (const cat of seedCategories) {
+      await MongoCategory.findOneAndUpdate(
+        { id: cat.id },
+        { name: cat.name, isActive: cat.isActive },
+        { upsert: true, new: true }
+      );
+    }
+  }
+
   for (const cat of seedCategories) {
-    await prisma.category.create({
-      data: { id: cat.id, name: cat.name, isActive: cat.isActive },
+    await prisma.category.upsert({
+      where: { id: cat.id },
+      create: { id: cat.id, name: cat.name, isActive: cat.isActive },
+      update: { name: cat.name, isActive: cat.isActive },
     });
   }
+
+  await SeedTracker.updateHistory(prisma, 'categories', hash);
+  logger.log('Categories seeded and hash updated.', 'CategorySeed');
 };

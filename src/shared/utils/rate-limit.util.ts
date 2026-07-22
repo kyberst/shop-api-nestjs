@@ -32,8 +32,9 @@ export const rateLimitKeyGenerator = (req: Request): string => {
     return clientKey;
   }
 
-  // If no user or client key is present, fallback to the standard IP key generator
-  return ipKeyGenerator(req.ip || 'anonymous') || 'anonymous';
+  // If no user or client key is present, fallback to the client IP address using the express-rate-limit helper for IPv6 validation
+  const ip = req.ip || 'anonymous';
+  return ipKeyGenerator(ip);
 };
 
 /**

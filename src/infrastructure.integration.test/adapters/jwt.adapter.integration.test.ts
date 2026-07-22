@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { JwtAdapter } from '../../infrastructure/adapters/jwt.adapter';
+import { JwtAdapter } from '@/infrastructure/adapters/jwt.adapter';
 import jwt from 'jsonwebtoken';
 
 vi.mock('jsonwebtoken', () => ({

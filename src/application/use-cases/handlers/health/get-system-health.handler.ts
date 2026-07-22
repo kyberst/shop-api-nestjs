@@ -1,4 +1,3 @@
-import { Injectable, Logger } from '@nestjs/common';
 import { IRequestHandler } from '@/application/mediator/interfaces';
 import { RequestHandler } from '@/application/mediator/decorators';
 import { DatabaseHealthService } from '@/domain/services/database-health.service';
@@ -11,17 +10,16 @@ import { KafkaResultCode } from '@/shared/result-codes/kafka-result-codes';
 import { ApiResult } from '@/shared/types/api-result';
 import { ResultInfo } from '@/shared/types/result-info';
 import { GetSystemHealthQuery } from '@/application/use-cases/queries/health/get-system-health.query';
+import { LoggerService } from '@/domain/services/logger.service';
 
-@Injectable()
 @RequestHandler(GetSystemHealthQuery)
 export class GetSystemHealthHandler implements IRequestHandler<GetSystemHealthQuery, ApiResult<any>> {
-  private readonly logger = new Logger(GetSystemHealthHandler.name);
-
   constructor(
     private readonly dbHealth: DatabaseHealthService,
     private readonly messaging: MessageBroker,
     private readonly cache: CacheService,
     private readonly monitoring: MonitoringService,
+    private readonly logger: LoggerService,
   ) {}
 
   async handle(query: GetSystemHealthQuery): Promise<ApiResult<any>> {

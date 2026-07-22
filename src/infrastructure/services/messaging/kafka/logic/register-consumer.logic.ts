@@ -1,5 +1,5 @@
 import { LoggerService } from '@/domain/services/logger.service';
-import { KafkaService } from '../kafka.service';
+import { KafkaService } from '@/infrastructure/services/messaging/kafka/kafka.service';
 
 export interface IModuleConsumer {
   groupId: string;

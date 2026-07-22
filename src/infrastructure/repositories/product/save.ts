@@ -1,6 +1,6 @@
 import { Product } from '@/domain/entities/product.entity';
-import { PrismaService } from '../../persistence/prisma.service';
-import { dbGuard } from '../../persistence/db-guard';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
+import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { MutationSummary } from '@/domain/types/mutation-summary';
 import { AppException } from '@/shared/errors/app-exception';
 import { ProductResultCode } from '@/application/constants/result-codes/product-result-codes';
@@ -19,7 +19,7 @@ export const saveProductLogic = async (
         name: product.name,
         description: product.description,
         price: product.price,
-        categoryId: 'General',
+        categoryId: 'f2f75ef3-7032-4ca3-be30-5899478f6575',
         imageUrl: product.imageUrl || '',
         rating: product.rating || 5,
         moq: product.moq || 1,

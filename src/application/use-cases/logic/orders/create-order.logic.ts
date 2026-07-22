@@ -5,6 +5,7 @@ import { ApiResult } from '@/shared/types/api-result';
 import { OrderResultCode } from '@/application/constants/result-codes/order-result-codes';
 import { CreateOrderRequestDto } from '@/application/dtos/request/orders/create-order.request.dto';
 import { OrderResponseDto } from '@/application/dtos/response/orders/order.response.dto';
+import { OrderMapper } from '@/application/mappers/order.mapper';
 
 /**
  * Logic to create an order.
@@ -32,22 +33,5 @@ export const createOrderLogic = async (
 
   await orderRepository.save(order);
 
-  const orderResponse: OrderResponseDto = {
-    id: order.id,
-    customer: order.customer,
-    customerEmail: order.customerEmail,
-    date: order.createdAt?.toISOString() || new Date().toISOString(),
-    total: order.total,
-    status: order.status,
-    userId: order.userId,
-    items: order.items.map(item => ({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      imageUrl: item.imageUrl
-    }))
-  };
-
-  return ApiResult.FromInfo(OrderResultCode.ORDER_CREATED, orderResponse);
+  return ApiResult.FromInfo(OrderResultCode.ORDER_CREATED, OrderMapper.toResponse(order));
 };

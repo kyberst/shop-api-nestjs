@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { ProductRepository } from '@/domain/repositories/product.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { IRequestHandler } from '@/application/mediator/interfaces';
@@ -7,7 +6,6 @@ import { RemoveProductCommand } from '@/application/use-cases/commands/products/
 import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.interface';
 import { removeProductLogic } from '@/application/use-cases/logic/products/remove-product.logic';
 
-@Injectable()
 @RequestHandler(RemoveProductCommand)
 export class RemoveProductHandler implements IRequestHandler<RemoveProductCommand, ApiResult> {
   constructor(

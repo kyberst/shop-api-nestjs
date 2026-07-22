@@ -1,4 +1,4 @@
-import { ApiResult } from '../types/api-result';
+import { ApiResult } from '@/shared/types/api-result';
 
 export function mapToApiResponse<T>(data: unknown, defaultStatusCode: number): { result: ApiResult<T>, overrideStatusCode?: number } {
   // Detect if data itself is a response structure

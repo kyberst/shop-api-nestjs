@@ -1,4 +1,3 @@
-import { Injectable, Inject } from '@nestjs/common';
 import { IRequestHandler, IMediator } from '@/application/mediator/interfaces';
 import { IPromptLoaderService } from '@/application/interfaces/ai/prompt-loader.interface';
 import { AiService } from '@/shared/interfaces/ai/ai.service.interface';
@@ -7,50 +6,51 @@ import { AiChatResponseDto } from '@/application/dtos/response/ai/ai-chat.respon
 import { RequestHandler } from '@/application/mediator/decorators';
 import { AiChatCommand } from '@/application/use-cases/commands/ai/ai-chat.command';
 import { AppException } from '@/shared/errors/app-exception';
-import { ResultInfo } from '@/shared/types/result-info';
-
-import { FindAllProductsQuery } from '@/application/use-cases/queries/products/find-all-products.query';
-import { FindAllOrdersQuery } from '@/application/use-cases/queries/orders/find-all-orders.query';
-import { FindAllCategoriesQuery } from '@/application/use-cases/queries/categories/find-all-categories.query';
-import { CreateProductCommand } from '@/application/use-cases/commands/products/create-product.command';
-import { UpdateProductCommand } from '@/application/use-cases/commands/products/update-product.command';
-import { UpdateOrderStatusCommand } from '@/application/use-cases/commands/orders/update-order-status.command';
+import { IAgentService } from '@/application/interfaces/ai/agent-service.interface';
 import { aiChatLogic } from '@/application/use-cases/logic/ai/ai-chat.logic';
+import { AiResultCode } from '@/application/constants/result-codes/ai-result-codes';
+import { AiToolRegistry } from '@/application/services/ai/ai-tool-registry.service';
 
-@Injectable()
 @RequestHandler(AiChatCommand)
 export class AiChatHandler implements IRequestHandler<AiChatCommand, ApiResult<AiChatResponseDto>> {
   constructor(
-    @Inject(IMediator)
     private readonly mediator: IMediator,
-    @Inject(IPromptLoaderService)
     private readonly promptLoader: IPromptLoaderService,
     private readonly aiService: AiService,
+    private readonly langchainAgent: IAgentService,
+    private readonly toolRegistry: AiToolRegistry,
   ) {}
 
   async handle(command: AiChatCommand): Promise<ApiResult<AiChatResponseDto>> {
     const systemInstruction = await this.promptLoader.compileFullSystemInstruction();
 
-    const dispatchTool = async (name: string, args: any): Promise<any> => {
-      switch (name) {
-        case 'getProducts':
-          return this.mediator.send(new FindAllProductsQuery());
-        case 'getOrders':
-          return this.mediator.send(new FindAllOrdersQuery());
-        case 'getCategories':
-          return this.mediator.send(new FindAllCategoriesQuery());
-        case 'createProduct':
-          return this.mediator.send(new CreateProductCommand(args));
-        case 'updateProduct': {
-          const { id, ...dto } = args;
-          return this.mediator.send(new UpdateProductCommand(id, dto));
-        }
-        case 'updateOrderStatus':
-          return this.mediator.send(new UpdateOrderStatusCommand(args.id, { status: args.status }));
-        default:
-          throw new AppException(ResultInfo.BadRequest('UNKNOWN_TOOL', `Unknown tool: ${name}`));
+    const dispatchTool = async (name: string, args: unknown): Promise<unknown> => {
+      const tool = this.toolRegistry.getTool(name);
+      if (!tool) {
+        throw new AppException(AiResultCode.UNKNOWN_TOOL(name));
       }
+      return tool.execute(args, this.mediator, this.langchainAgent);
     };
+
+    if (command.userId) {
+      try {
+        const response = await this.langchainAgent.processChat(
+          command.userId,
+          command.message,
+          dispatchTool,
+          command.language
+        );
+        const resDto: AiChatResponseDto = {
+          message: response.message,
+          actionPerformed: response.actionPerformed,
+          data: response.data || null,
+        };
+        return ApiResult.FromInfo(AiResultCode.CHAT_SUCCESS, resDto);
+      } catch (e) {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        return ApiResult.FromInfo(AiResultCode.LANGCHAIN_ERROR(errorMessage));
+      }
+    }
 
     return await aiChatLogic(
       this.aiService,

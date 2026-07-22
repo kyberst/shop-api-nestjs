@@ -1,14 +1,7 @@
 import { Order } from '@/domain/entities/order.entity';
 import { MutationSummary } from '@/domain/types/mutation-summary';
 import { PaginatedData } from '@/domain/types/paginated-data';
-
-export interface OrderQueryOptions {
-  page?: number;
-  pageSize?: number;
-  status?: string;
-  customerEmail?: string;
-  userId?: string;
-}
+import { OrderQueryOptions } from '@/domain/interfaces/order-query-options.interface';
 
 export abstract class OrderRepository {
   abstract findAll(options?: OrderQueryOptions): Promise<PaginatedData<Order>>;

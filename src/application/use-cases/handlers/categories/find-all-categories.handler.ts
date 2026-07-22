@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { CategoryRepository } from '@/domain/repositories/category.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { IRequestHandler } from '@/application/mediator/interfaces';
@@ -7,7 +6,7 @@ import { FindAllCategoriesQuery } from '@/application/use-cases/queries/categori
 import { findAllCategoriesLogic } from '@/application/use-cases/logic/categories/find-all-categories.logic';
 import { CategoryResponseDto } from '@/application/dtos/response/categories/category.response.dto';
 
-@Injectable()
+
 @RequestHandler(FindAllCategoriesQuery)
 export class FindAllCategoriesHandler implements IRequestHandler<FindAllCategoriesQuery, ApiResult<CategoryResponseDto[]>> {
   constructor(

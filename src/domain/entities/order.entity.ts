@@ -1,16 +1,5 @@
 import { BaseEntity } from './base.entity';
-
-export class OrderItem implements BaseEntity {
-  id!: string;
-
-  name!: string;
-
-  price!: number;
-
-  quantity!: number;
-
-  imageUrl?: string;
-}
+import { OrderItem } from './order-item.entity';
 
 export interface Order extends BaseEntity {
   customer: string;

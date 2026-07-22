@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { IRequestHandler } from '@/application/mediator/interfaces';
 import { RequestHandler } from '@/application/mediator/decorators';
 import { UserRepository } from '@/domain/repositories/user.repository';
@@ -6,7 +5,7 @@ import { ApiResult } from '@/shared/types/api-result';
 import { UserResultCode } from '@/application/constants/result-codes/user-result-codes';
 import { UpdateUserRoleCommand } from '@/application/use-cases/commands/users/update-user-role.command';
 
-@Injectable()
+
 @RequestHandler(UpdateUserRoleCommand)
 export class UpdateUserRoleHandler implements IRequestHandler<UpdateUserRoleCommand, ApiResult<void>> {
   constructor(

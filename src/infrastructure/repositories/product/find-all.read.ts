@@ -1,11 +1,11 @@
 import { Product } from '@/domain/entities/product.entity';
-import { MongooseService } from '../../persistence/mongoose.service';
-import { MongoProduct } from '../../persistence/mongo/product.model';
-import { MongoCategory } from '../../persistence/mongo/category.model';
-import { dbGuard } from '../../persistence/db-guard';
+import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
+import { MongoProduct } from '@/infrastructure/persistence/mongo/product.model';
+import { MongoCategory } from '@/infrastructure/persistence/mongo/category.model';
+import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { AppException } from '@/shared/errors/app-exception';
 import { ProductResultCode } from '@/application/constants/result-codes/product-result-codes';
-import { ProductQueryOptions } from '@/domain/repositories/product.repository';
+import { ProductQueryOptions } from '@/domain/interfaces/product-query-options.interface';
 
 /**
  * Fragmented logic to find active or all products with filters and pagination.

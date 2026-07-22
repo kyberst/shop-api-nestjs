@@ -1,5 +1,5 @@
-import { Controller, Get, UseGuards, Query, Req } from '@nestjs/common';
-import { Mediator } from '@/infrastructure/mediator/mediator.service';
+import { Controller, Get, UseGuards, Query, Req, Inject } from '@nestjs/common';
+import { IMediator } from '@/application/mediator/interfaces';
 import { FindAllOrdersQuery } from '@/application/use-cases/queries/orders/find-all-orders.query';
 import { AuthGuard } from '@/api/guards/auth.guard';
 import { RolesGuard } from '@/api/guards/roles.guard';
@@ -16,7 +16,7 @@ import { OrderResponseDto } from '@/application/dtos/response/orders/order.respo
 @UseGuards(AuthGuard, RolesGuard, PermissionsGuard)
 export class FindAllOrdersController {
   constructor(
-    private readonly mediator: Mediator,
+    @Inject(IMediator) private readonly mediator: IMediator,
   ) {}
 
   @Get()

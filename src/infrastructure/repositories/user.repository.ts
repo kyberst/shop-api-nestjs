@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@/domain/entities/user.entity';
 import { UserRepository as DomainUserRepository } from '@/domain/repositories/user.repository';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { PrismaService } from '../persistence/prisma.service';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { findUserByEmailInternalLogic } from './user/find-by-email.internal';
 import { saveUserLogic } from './user/save';
 import { findAllUsersLogic } from './user/find-all';

@@ -1,8 +1,8 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Inject } from '@nestjs/common';
 import { CreateCategoryRequestDto } from '@/application/dtos/request/categories/create-category.request.dto';
 import { CategoryResponseDto } from '@/application/dtos/response/categories/category.response.dto';
 import { ApiResult } from '@/shared/types/api-result';
-import { Mediator } from '@/infrastructure/mediator/mediator.service';
+import { IMediator } from '@/application/mediator/interfaces';
 import { CreateCategoryCommand } from '@/application/use-cases/commands/categories/create-category.command';
 import { AuthGuard } from '@/api/guards/auth.guard';
 import { RolesGuard } from '@/api/guards/roles.guard';
@@ -13,7 +13,7 @@ import { Permissions } from '@/api/decorators/permissions.decorator';
 @Controller('categories')
 export class CreateCategoryController {
   constructor(
-    private readonly mediator: Mediator,
+    @Inject(IMediator) private readonly mediator: IMediator,
   ) {}
 
   @Post()

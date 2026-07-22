@@ -1,6 +1,6 @@
-import { Controller, Delete, Param, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Param, UseGuards, Inject } from '@nestjs/common';
 import { ApiResult } from '@/shared/types/api-result';
-import { Mediator } from '@/infrastructure/mediator/mediator.service';
+import { IMediator } from '@/application/mediator/interfaces';
 import { RemoveCategoryCommand } from '@/application/use-cases/commands/categories/remove-category.command';
 import { AuthGuard } from '@/api/guards/auth.guard';
 import { RolesGuard } from '@/api/guards/roles.guard';
@@ -11,7 +11,7 @@ import { Permissions } from '@/api/decorators/permissions.decorator';
 @Controller('categories')
 export class RemoveCategoryController {
   constructor(
-    private readonly mediator: Mediator,
+    @Inject(IMediator) private readonly mediator: IMediator,
   ) {}
 
   @Delete(':id')

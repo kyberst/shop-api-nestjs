@@ -10,8 +10,6 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "ignoreDeprecations": "5.0",
-    "esModuleInterop": true,
     "paths": {
       "@/*": ["src/*"]
     },

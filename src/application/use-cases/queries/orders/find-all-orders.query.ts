@@ -1,6 +1,6 @@
 import { IRequest } from '@/application/mediator/interfaces';
 import { ApiResult } from '@/shared/types/api-result';
-import { OrderQueryOptions } from '@/domain/repositories/order.repository';
+import { OrderQueryOptions } from '@/domain/interfaces/order-query-options.interface';
 import { PaginatedData } from '@/domain/types/paginated-data';
 import { RequestUser } from '@/shared/types/auth.interface';
 import { OrderResponseDto } from '@/application/dtos/response/orders/order.response.dto';

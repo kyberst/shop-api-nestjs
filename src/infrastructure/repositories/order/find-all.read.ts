@@ -1,10 +1,10 @@
 import { Order } from '@/domain/entities/order.entity';
-import { MongooseService } from '../../persistence/mongoose.service';
-import { MongoOrder } from '../../persistence/mongo/order.model';
-import { dbGuard } from '../../persistence/db-guard';
+import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
+import { MongoOrder } from '@/infrastructure/persistence/mongo/order.model';
+import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { AppException } from '@/shared/errors/app-exception';
 import { OrderResultCode } from '@/application/constants/result-codes/order-result-codes';
-import { OrderQueryOptions } from '@/domain/repositories/order.repository';
+import { OrderQueryOptions } from '@/domain/interfaces/order-query-options.interface';
 
 /**
  * Fragmented logic to find all orders with filters and pagination.

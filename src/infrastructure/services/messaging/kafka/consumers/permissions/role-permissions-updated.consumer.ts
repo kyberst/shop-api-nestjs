@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { KafkaConsumerService } from '../../kafka.consumer.service';
+import { KafkaConsumerService } from '@/infrastructure/services/messaging/kafka/kafka.consumer.service';
 import { MongoRolePermission } from '@/infrastructure/persistence/mongo/role-permission.model';
 import { v4 as uuidv4 } from 'uuid';
 

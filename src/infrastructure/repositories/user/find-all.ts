@@ -1,9 +1,8 @@
-import { PrismaService } from '../../persistence/prisma.service';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { User } from '@/domain/entities/user.entity';
-import { toDomainUser } from './map/to-domain-user.map';
 
 /**
- * Logic to find all users from the Prisma database and map them to domain entities.
+ * Logic to find all users from the Prisma database and return them as-is.
  * 
  * @param prisma - The Prisma persistence service.
  * @returns A promise that resolves to an array of domain User entities.
@@ -18,6 +17,6 @@ export const findAllUsersLogic = async (prisma: PrismaService): Promise<User[]> 
     }
   });
 
-  return users.map((user: any) => toDomainUser(user));
+  return users as User[];
 };
 

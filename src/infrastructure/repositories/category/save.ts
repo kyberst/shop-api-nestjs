@@ -1,6 +1,6 @@
 import { Category } from '@/domain/entities/category.entity';
-import { PrismaService } from '../../persistence/prisma.service';
-import { dbGuard } from '../../persistence/db-guard';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
+import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { MutationSummary } from '@/domain/types/mutation-summary';
 import { AppException } from '@/shared/errors/app-exception';
 import { CategoryResultCode } from '@/application/constants/result-codes/category-result-codes';

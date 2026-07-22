@@ -1,38 +1,21 @@
-import { ProductRepository } from '@/domain/repositories/product.repository';
+import { StoreProductRepository } from '@/domain/repositories/store-product.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { ProductResultCode } from '@/application/constants/result-codes/product-result-codes';
-import { ProductQueryOptions } from '@/domain/repositories/product.repository';
+import { ProductQueryOptions } from '@/domain/interfaces/product-query-options.interface';
 import { PaginatedData } from '@/domain/types/paginated-data';
 import { ProductResponseDto } from '@/application/dtos/response/products/product.response.dto';
+import { ProductMapper } from '@/application/mappers/product.mapper';
 
 /**
  * Logic to find all products with filters and pagination.
  */
 export const findAllProductsLogic = async (
-  productRepository: ProductRepository,
+  productRepository: StoreProductRepository,
   options?: ProductQueryOptions
 ): Promise<ApiResult<PaginatedData<ProductResponseDto>>> => {
   const productsResult = await productRepository.findAll(options);
   
-  const mappedData: ProductResponseDto[] = productsResult.items.map(product => ({
-    id: product.id,
-    name: product.name,
-    description: product.description,
-    price: product.price,
-    category: product.category,
-    imageUrl: product.imageUrl,
-    rating: product.rating,
-    moq: product.moq,
-    supplierName: product.supplierName,
-    supplierCountry: product.supplierCountry,
-    isTradeAssurance: product.isTradeAssurance,
-    isVerified: product.isVerified,
-    isActive: product.isActive,
-    createdAt: product.createdAt,
-    updatedAt: product.updatedAt,
-    createdBy: product.createdBy,
-    updatedBy: product.updatedBy
-  }));
+  const mappedData = ProductMapper.toResponseList(productsResult.items);
 
   const paginatedDto: PaginatedData<ProductResponseDto> = {
     items: mappedData,

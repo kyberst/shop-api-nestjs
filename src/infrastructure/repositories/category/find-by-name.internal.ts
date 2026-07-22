@@ -1,6 +1,6 @@
 import { Category } from '@/domain/entities/category.entity';
-import { PrismaService } from '../../persistence/prisma.service';
-import { dbGuard } from '../../persistence/db-guard';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
+import { dbGuard } from '@/infrastructure/persistence/db-guard';
 
 /**
  * Logic to find a category by name using Prisma (source of truth for internal validation).

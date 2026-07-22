@@ -1,5 +1,5 @@
 import { HttpStatus } from '@/shared/types/http-status';
-import { ResultInfo } from '../types/result-info';
+import { ResultInfo } from '@/shared/types/result-info';
 
 export class DatabaseResultCode {
   static readonly DATABASE_CONNECTED = new ResultInfo(true, HttpStatus.OK, 'DATABASE_CONNECTED', 'Database is online and connected');

@@ -1,6 +1,6 @@
 import { Injectable, Inject, Optional } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { IRequest, IPipelineBehavior, MEDIATOR_BEHAVIORS, IMediator } from '../../application/mediator/interfaces';
+import { IRequest, IPipelineBehavior, MEDIATOR_BEHAVIORS, IMediator } from '@/application/mediator/interfaces';
 
 @Injectable()
 export class Mediator implements IMediator {

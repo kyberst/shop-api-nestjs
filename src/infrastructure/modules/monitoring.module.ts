@@ -1,6 +1,6 @@
 import { Module, Global } from '@nestjs/common';
-import { OpenSearchService } from '../services/monitoring/opensearch/opensearch.service';
-import { MonitoringLoggerService } from '../services/monitoring/monitoring-logger.service';
+import { OpenSearchService } from '@/infrastructure/services/monitoring/opensearch/opensearch.service';
+import { MonitoringLoggerService } from '@/infrastructure/services/monitoring/monitoring-logger.service';
 import { MonitoringService } from '@/shared/interfaces/monitoring/monitoring.interface';
 import { LoggerService } from '@/domain/services/logger.service';
 

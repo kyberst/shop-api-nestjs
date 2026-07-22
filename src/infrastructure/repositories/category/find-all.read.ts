@@ -1,7 +1,7 @@
 import { Category } from '@/domain/entities/category.entity';
-import { MongooseService } from '../../persistence/mongoose.service';
-import { MongoCategory } from '../../persistence/mongo/category.model';
-import { dbGuard } from '../../persistence/db-guard';
+import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
+import { MongoCategory } from '@/infrastructure/persistence/mongo/category.model';
+import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { AppException } from '@/shared/errors/app-exception';
 import { CategoryResultCode } from '@/application/constants/result-codes/category-result-codes';
 

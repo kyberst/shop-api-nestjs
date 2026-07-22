@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { setAuthCookie, clearAuthCookie } from '../../api/utils/cookie.util';
+import { setAuthCookie, clearAuthCookie } from '@/api/utils/cookie.util';
 import { Response } from 'express';
 
 describe('cookie.util', () => {

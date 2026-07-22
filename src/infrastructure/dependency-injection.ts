@@ -1,15 +1,19 @@
 import { Provider } from '@nestjs/common';
-import { CategoryRepository as ConcreteCategoryRepository } from './repositories/category.repository';
-import { ProductRepository as ConcreteProductRepository } from './repositories/product.repository';
-import { OrderRepository as ConcreteOrderRepository } from './repositories/order.repository';
-import { UserRepository as ConcreteUserRepository } from './repositories/user.repository';
-import { RolePermissionRepository as ConcreteRolePermissionRepository } from './repositories/role-permission/role-permission.repository';
-import { PrismaService } from './persistence/prisma.service';
-import { MongooseService } from './persistence/mongoose.service';
-import { ConcreteDatabaseHealthService } from './persistence/database-health.service';
+import { CategoryRepository as ConcreteCategoryRepository } from '@/infrastructure/repositories/category.repository';
+import { ProductRepository as ConcreteProductRepository } from '@/infrastructure/repositories/product.repository';
+import { StoreProductRepository as ConcreteStoreProductRepository } from '@/infrastructure/repositories/store-product.repository';
+import { AdminProductRepository as ConcreteAdminProductRepository } from '@/infrastructure/repositories/admin-product.repository';
+import { OrderRepository as ConcreteOrderRepository } from '@/infrastructure/repositories/order.repository';
+import { UserRepository as ConcreteUserRepository } from '@/infrastructure/repositories/user.repository';
+import { RolePermissionRepository as ConcreteRolePermissionRepository } from '@/infrastructure/repositories/role-permission.repository';
+import { PrismaService } from '@/infrastructure/persistence/prisma.service';
+import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
+import { ConcreteDatabaseHealthService } from '@/infrastructure/persistence/database-health.service';
 
 import { CategoryRepository } from '@/domain/repositories/category.repository';
 import { ProductRepository } from '@/domain/repositories/product.repository';
+import { StoreProductRepository } from '@/domain/repositories/store-product.repository';
+import { AdminProductRepository } from '@/domain/repositories/admin-product.repository';
 import { OrderRepository } from '@/domain/repositories/order.repository';
 import { UserRepository } from '@/domain/repositories/user.repository';
 import { RolePermissionRepository } from '@/domain/repositories/role-permission.repository';
@@ -29,6 +33,14 @@ export const repositoryProviders: Provider[] = [
   {
     provide: ProductRepository,
     useClass: ConcreteProductRepository,
+  },
+  {
+    provide: StoreProductRepository,
+    useClass: ConcreteStoreProductRepository,
+  },
+  {
+    provide: AdminProductRepository,
+    useClass: ConcreteAdminProductRepository,
   },
   {
     provide: OrderRepository,
@@ -56,6 +68,8 @@ export const persistenceTokens = [
   PrismaService,
   CategoryRepository,
   ProductRepository,
+  StoreProductRepository,
+  AdminProductRepository,
   OrderRepository,
   UserRepository,
   RolePermissionRepository,

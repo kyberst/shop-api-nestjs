@@ -1,8 +1,8 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Inject } from '@nestjs/common';
 import { ProductResponseDto } from '@/application/dtos/response/products/product.response.dto';
 import { CreateProductRequestDto } from '@/application/dtos/request/products/create-product.request.dto';
 import { ApiResult } from '@/shared/types/api-result';
-import { Mediator } from '@/infrastructure/mediator/mediator.service';
+import { IMediator } from '@/application/mediator/interfaces';
 import { CreateProductCommand } from '@/application/use-cases/commands/products/create-product.command';
 import { AuthGuard } from '@/api/guards/auth.guard';
 import { RolesGuard } from '@/api/guards/roles.guard';
@@ -13,7 +13,7 @@ import { Permissions } from '@/api/decorators/permissions.decorator';
 @Controller('products')
 export class CreateProductController {
   constructor(
-    private readonly mediator: Mediator,
+    @Inject(IMediator) private readonly mediator: IMediator,
   ) {}
 
   @Post()

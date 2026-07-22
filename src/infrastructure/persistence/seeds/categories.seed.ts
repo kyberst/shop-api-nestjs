@@ -7,8 +7,8 @@ export const seedCategories: Category[] = [
   { id: '17698a67-c0e6-42d8-bf87-bfb7e8006d5c', name: 'Stationery', isActive: true },
   { id: 'fa1a1157-19ee-4731-8930-cf2f520be678', name: 'Apparel', isActive: true },
   { id: 'a93ca6be-572e-42ef-8cb6-b92d6e75a6c1', name: 'Tools', isActive: true },
-  { id: 'General', name: 'General', isActive: true },
-  { id: 'machinery-cat-id', name: 'Machinery', isActive: true },
-  { id: 'packaging-cat-id', name: 'Packaging', isActive: true },
-  { id: 'automotive-cat-id', name: 'Automotive', isActive: true }
+  { id: 'f2f75ef3-7032-4ca3-be30-5899478f6575', name: 'General', isActive: true },
+  { id: '41935ff5-df25-476c-9bb9-b88d8b139db9', name: 'Machinery', isActive: true },
+  { id: 'ce297a76-9d80-45c1-9f93-0177be60db4d', name: 'Packaging', isActive: true },
+  { id: '2467b938-1ee4-4ee9-b1d3-35f11cb2088b', name: 'Automotive', isActive: true }
 ];

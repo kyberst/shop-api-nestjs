@@ -1,15 +1,4 @@
-
-export class CreateOrderItemRequestDto {
-  productId!: string;
-
-  quantity!: number;
-
-  price!: number;
-
-  name?: string;
-
-  imageUrl?: string;
-}
+import { CreateOrderItemRequestDto } from './create-order-item.request.dto';
 
 export class CreateOrderRequestDto {
   id?: string;

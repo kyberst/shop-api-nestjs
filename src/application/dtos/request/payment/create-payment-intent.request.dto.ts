@@ -1,9 +1,4 @@
-
-export class PaymentItemRequestDto {
-  price!: number;
-
-  quantity!: number;
-}
+import { PaymentItemRequestDto } from './payment-item.request.dto';
 
 export class CreatePaymentIntentRequestDto {
   items!: PaymentItemRequestDto[];

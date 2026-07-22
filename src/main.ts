@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { MonitoringLoggerService } from './infrastructure/services/monitoring/monitoring-logger.service';
 import { AjvValidationPipe } from './api/pipes/ajv-validation.pipe';
@@ -35,11 +36,13 @@ async function bootstrap() {
     bufferLogs: true,
   });
   
+  app.enableShutdownHooks();
+  
   const logger = app.get(MonitoringLoggerService);
   app.useLogger(logger);
   
   // Trust the reverse proxy
-  app.set('trust proxy', 1);
+  app.set('trust proxy', true);
   
   // Security Middlewares
   app.use(helmet());
@@ -56,8 +59,14 @@ async function bootstrap() {
   // Global prefix
   app.setGlobalPrefix('api');
   
+  // Enable API Versioning (URI-based, defaults to v1)
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
+  
   // Swagger setup
-  const openapiDocsDir = path.resolve(__dirname, '..', '..', 'docs', 'openapi');
+  const openapiDocsDir = path.resolve(__dirname, '..', 'docs', 'openapi');
   const document = OpenApiLoader.load(openapiDocsDir);
 
   if (Object.keys(document).length > 0) {
@@ -83,10 +92,6 @@ async function bootstrap() {
   app.useGlobalPipes(new AjvValidationPipe());
   
   await app.listen(port, '0.0.0.0');
-  console.log('──────────────────────────────────────────');
-  console.log('  Server:    http://localhost:' + port + '/api');
-  console.log('  Swagger:   http://localhost:' + port + '/docs');
-  console.log('──────────────────────────────────────────');
   logger.log(`[NestJS] Backend running on port ${port} (isProduction: ${isProduction})`);
 }
 

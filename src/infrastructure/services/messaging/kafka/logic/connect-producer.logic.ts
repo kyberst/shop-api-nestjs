@@ -11,8 +11,9 @@ export const connectProducerLogic = async (
     await producer.connect();
     logger.log('Connected to Kafka');
     return true;
-  } catch (error: any) {
-    logger.warn(`Failed to connect to Kafka. Message broker features will be disabled. Reason: ${error.message}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    logger.log(`Failed to connect to Kafka. Message broker features will be disabled. Reason: ${message}`);
     return false;
   }
 };

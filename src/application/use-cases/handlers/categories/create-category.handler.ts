@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { CategoryRepository } from '@/domain/repositories/category.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { IRequestHandler } from '@/application/mediator/interfaces';
@@ -8,7 +7,7 @@ import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.inte
 import { CategoryResponseDto } from '@/application/dtos/response/categories/category.response.dto';
 import { createCategoryLogic } from '@/application/use-cases/logic/categories/create-category.logic';
 
-@Injectable()
+
 @RequestHandler(CreateCategoryCommand)
 export class CreateCategoryHandler implements IRequestHandler<CreateCategoryCommand, ApiResult<CategoryResponseDto>> {
   constructor(

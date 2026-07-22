@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AuthCookieInterceptor } from '../../api/interceptors/auth-cookie.interceptor';
+import { AuthCookieInterceptor } from '@/api/interceptors/auth-cookie.interceptor';
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { of } from 'rxjs';
-import * as cookieUtils from '../../api/utils/cookie.util';
+import * as cookieUtils from '@/api/utils/cookie.util';
 
 vi.mock('../../api/utils/cookie.util', () => ({
   setAuthCookie: vi.fn(),
