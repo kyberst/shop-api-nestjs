@@ -1,5 +1,5 @@
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
-import { User } from '@/domain/entities/user.entity';
+import { User, UserRoleType } from '@/domain/entities/user.entity';
 
 /**
  * Logic to find a single user by ID from the Prisma database and map to a domain entity.
@@ -13,6 +13,14 @@ export const findUserByIdLogic = async (prisma: PrismaService, id: string): Prom
     where: { id },
   });
   if (!user) return null;
-  return user as User;
+  return User.create({
+    id: user.id,
+    email: user.email,
+    name: user.name || '',
+    role: user.role as UserRoleType,
+    password: user.password ?? undefined,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  });
 };
 

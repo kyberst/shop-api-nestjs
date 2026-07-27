@@ -2,8 +2,7 @@ import { Category } from '@/domain/entities/category.entity';
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { AppException } from '@/shared/errors/app-exception';
-import { CategoryResultCode } from '@/application/constants/result-codes/category-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 
 /**
  * Fragmented logic to update a category.
@@ -22,8 +21,8 @@ export const updateCategoryLogic = async (
     return { affectedCount };
   }
 
-  throw new AppException(
-    CategoryResultCode.CATEGORY_UPDATE_FAILED,
-    `Prisma error: ${prismaResult.error?.message}`
+  throw new DatabaseException(
+    `Prisma error updating category: ${prismaResult.error?.message}`,
+    prismaResult.error
   );
 };

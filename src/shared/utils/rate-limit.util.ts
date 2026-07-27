@@ -69,7 +69,7 @@ export const createRateLimiter = (config: CreateRateLimiterConfig) => {
     message: config.message ?? 'Too many requests, please try again later',
     keyGenerator: rateLimitKeyGenerator,
     handler: config.handler as unknown as undefined,
-    store: config.store as unknown as import('express-rate-limit').Store,
+    store: typeof config.store === 'function' ? (config.store as () => unknown)() as unknown as import('express-rate-limit').Store : config.store as unknown as import('express-rate-limit').Store,
     validate: {
       trustProxy: false,
       xForwardedForHeader: false,

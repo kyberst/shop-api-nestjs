@@ -2,8 +2,7 @@ import { Order } from '@/domain/entities/order.entity';
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { AppException } from '@/shared/errors/app-exception';
-import { OrderResultCode } from '@/application/constants/result-codes/order-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 
 /**
  * Fragmented logic to save an order.
@@ -30,8 +29,8 @@ export const saveOrderLogic = async (
     return { affectedCount: 1 };
   }
 
-  throw new AppException(
-    OrderResultCode.ORDER_CREATION_FAILED,
-    `Prisma error: ${prismaResult.error?.message}`
+  throw new DatabaseException(
+    `Prisma error creating order: ${prismaResult.error?.message}`,
+    prismaResult.error
   );
 };

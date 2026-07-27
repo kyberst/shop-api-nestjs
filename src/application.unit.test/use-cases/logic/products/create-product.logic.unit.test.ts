@@ -28,4 +28,26 @@ describe('createProductLogic', () => {
     expect(result.data!.name).toBe(createDto.name);
     expect(result.data!.price).toBe(createDto.price);
   });
+
+  it('should fallback category to "General" and image to empty string when not provided', async () => {
+    const mockProductRepository = {
+      save: vi.fn().mockResolvedValue({ success: true }),
+      findByName: vi.fn().mockResolvedValue(null),
+    } as unknown as ProductRepository;
+
+    const createDto: CreateProductRequestDto = {
+      name: 'No Category Product',
+      description: 'A product with no category',
+      price: 49.99,
+      sku: 'test-sku-no-cat'
+    } as any; // Cast as any to omit categoryId and image for testing fallback
+
+    const result = await createProductLogic(mockProductRepository, createDto);
+
+    expect(mockProductRepository.save).toHaveBeenCalledTimes(1);
+    expect(result.success).toBe(true);
+    expect(result.resultType).toBe(ProductResultCode.PRODUCT_CREATED.resultType);
+    expect(result.data!.category).toBe('General');
+    expect(result.data!.imageUrl).toBe('');
+  });
 });

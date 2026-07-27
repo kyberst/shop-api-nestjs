@@ -2,8 +2,7 @@ import { Product } from '@/domain/entities/product.entity';
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { AppException } from '@/shared/errors/app-exception';
-import { ProductResultCode } from '@/application/constants/result-codes/product-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 
 /**
  * Fragmented logic to save a product.
@@ -36,8 +35,8 @@ export const saveProductLogic = async (
     return { affectedCount: 1 };
   }
 
-  throw new AppException(
-    ProductResultCode.PRODUCT_CREATION_FAILED,
-    `Prisma error: ${prismaResult.error?.message}`
+  throw new DatabaseException(
+    `Prisma error saving product: ${prismaResult.error?.message}`,
+    prismaResult.error
   );
 };

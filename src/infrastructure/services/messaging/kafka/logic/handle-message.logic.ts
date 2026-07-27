@@ -1,7 +1,6 @@
 import { LoggerService } from '@/domain/services/logger.service';
 import { IModuleConsumer } from './register-consumer.logic';
-import { AppException } from '@/shared/errors/app-exception';
-import { KafkaResultCode } from '@/shared/result-codes/kafka-result-codes';
+import { KafkaException } from '@/infrastructure/exceptions/kafka.exception';
 
 export const handleMessageLogic = async (
   c: IModuleConsumer,
@@ -17,9 +16,9 @@ export const handleMessageLogic = async (
     }
   } catch (err: any) {
     logger.error(`Failed to process Kafka consumer message for topic ${topic}: ${err.message}`, err.stack);
-    throw new AppException(KafkaResultCode.KAFKA_CONNECTION_FAILED, {
-      message: `Failed to process Kafka consumer message for topic ${topic}`,
-      error: err.message,
-    });
+    throw new KafkaException(
+      `Failed to process Kafka consumer message for topic ${topic}: ${err.message}`,
+      err
+    );
   }
 };

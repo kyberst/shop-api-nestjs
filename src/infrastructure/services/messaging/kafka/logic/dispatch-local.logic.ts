@@ -1,6 +1,5 @@
 import { LoggerService } from '@/domain/services/logger.service';
-import { AppException } from '@/shared/errors/app-exception';
-import { KafkaResultCode } from '@/shared/result-codes/kafka-result-codes';
+import { KafkaException } from '@/infrastructure/exceptions/kafka.exception';
 
 export type LocalEventCallback = (topic: string, message: any) => Promise<void>;
 
@@ -22,9 +21,9 @@ export const dispatchLocalLogic = async (
     const errorDetails = errors.map(e => (e instanceof Error ? e.message : String(e))).join(', ');
     logger.error(`Failed to process ${errors.length} local event listeners for topic ${topic}: ${errorDetails}`);
 
-    throw new AppException(KafkaResultCode.KAFKA_CONNECTION_FAILED, {
-      message: `Failed to process some local event listeners for topic ${topic}`,
-      errors: errors.map(e => (e instanceof Error ? e.message : String(e))),
-    });
+    throw new KafkaException(
+      `Failed to process some local event listeners for topic ${topic}: ${errorDetails}`,
+      errors
+    );
   }
 };

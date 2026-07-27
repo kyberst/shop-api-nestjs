@@ -1,4 +1,4 @@
-import { AdminProductRepository } from '@/domain/repositories/admin-product.repository';
+import { ProductQueryRepository } from '@/domain/repositories/product.query.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { IRequestHandler } from '@/application/mediator/interfaces';
 import { RequestHandler } from '@/application/mediator/decorators';
@@ -10,7 +10,7 @@ import { ProductResponseDto } from '@/application/dtos/response/products/product
 @RequestHandler(FindAllProductsAdminQuery)
 export class FindAllProductsAdminHandler implements IRequestHandler<FindAllProductsAdminQuery, ApiResult<PaginatedData<ProductResponseDto>>> {
   constructor(
-    private readonly adminProductRepository: AdminProductRepository
+    private readonly adminProductRepository: ProductQueryRepository
   ) {}
 
   async handle(command: FindAllProductsAdminQuery): Promise<ApiResult<PaginatedData<ProductResponseDto>>> {

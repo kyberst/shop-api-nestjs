@@ -1,9 +1,7 @@
 import { Order } from '@/domain/entities/order.entity';
 import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
-import { MongoOrder } from '@/infrastructure/persistence/mongo/order.model';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
-import { AppException } from '@/shared/errors/app-exception';
-import { OrderResultCode } from '@/application/constants/result-codes/order-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 import { OrderQueryOptions } from '@/domain/interfaces/order-query-options.interface';
 
 /**
@@ -13,6 +11,8 @@ export const findAllOrdersLogic = async (
   mongoose: MongooseService,
   options?: OrderQueryOptions
 ): Promise<{ items: Order[]; total: number }> => {
+  const OrderModel = mongoose.getModel('Order');
+
   const mongoResult = await dbGuard(mongoose, async () => {
     const query: any = {};
     
@@ -33,7 +33,7 @@ export const findAllOrdersLogic = async (
       }
     }
 
-    const mQuery = MongoOrder.find(query, { _id: 0, __v: 0 }).sort({ date: -1 });
+    const mQuery = OrderModel.find(query, { _id: 0, __v: 0 }).sort({ date: -1 });
 
     if (options?.page !== undefined && options?.pageSize !== undefined) {
       const page = Number(options.page) || 1;
@@ -44,19 +44,19 @@ export const findAllOrdersLogic = async (
 
     const [items, total] = await Promise.all([
       mQuery.lean(),
-      MongoOrder.countDocuments(query)
+      OrderModel.countDocuments(query)
     ]);
 
-    return { items: items as Order[], total };
+    return { items: items as unknown as Order[], total };
   });
 
   if (mongoResult.ok) {
     return mongoResult.value;
   }
 
-  throw new AppException(
-    OrderResultCode.ORDERS_FETCH_FAILED,
-    `Mongo error: ${mongoResult.error?.message}`
+  throw new DatabaseException(
+    `Mongo error fetching orders: ${mongoResult.error?.message}`,
+    mongoResult.error
   );
 };
 

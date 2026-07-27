@@ -26,8 +26,8 @@ export const createProductLogic = async (
     name: createProductDto.name,
     description: createProductDto.description,
     price: createProductDto.price,
-    category: createProductDto.categoryId || 'General',
-    imageUrl: createProductDto.image || '',
+    category: createProductDto.categoryId,
+    imageUrl: createProductDto.image,
   });
 
   await productRepository.save(product);

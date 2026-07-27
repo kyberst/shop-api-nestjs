@@ -11,6 +11,7 @@ import { OrderCreatedConsumer } from '@/infrastructure/services/messaging/kafka/
 import { OrderStatusUpdatedConsumer } from '@/infrastructure/services/messaging/kafka/consumers/order/order-status-updated.consumer';
 import { NotificationsModule } from './notifications.module';
 import { OrderRepository } from '@/domain/repositories/order.repository';
+import { OrderQueryRepository } from '@/domain/repositories/order.query.repository';
 import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.interface';
 
 @Module({
@@ -38,10 +39,10 @@ import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.inte
     },
     {
       provide: FindAllOrdersHandler,
-      useFactory: (repo: OrderRepository) => {
+      useFactory: (repo: OrderQueryRepository) => {
         return new FindAllOrdersHandler(repo);
       },
-      inject: [OrderRepository],
+      inject: [OrderQueryRepository],
     },
     OrderCreatedConsumer,
     OrderStatusUpdatedConsumer,

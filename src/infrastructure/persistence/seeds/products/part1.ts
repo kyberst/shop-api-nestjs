@@ -1,6 +1,6 @@
 import { Product } from '@/domain/entities/product.entity';
 
-export const productsPart1: Product[] = [
+export const productsPart1: any[] = [
   {
     id: 'fa68cbe6-6f7c-4ea0-bd69-808603681eb1',
     name: 'Industrial 4K AI Dome Security Camera',

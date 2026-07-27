@@ -21,8 +21,23 @@ import { SecurityModule } from '@/api/security.module';
 import { PermissionsModule } from '@/infrastructure/modules/permissions.module';
 import { RateLimitMiddleware } from '@/api/middleware/rate-limit/rate-limit.middleware';
 
-const frontendDistPath = join(__dirname, '..', '..', 'frontend', 'dist');
-const serveStaticModule = existsSync(frontendDistPath)
+function resolveFrontendDist(): string | null {
+  const candidates = [
+    join(process.cwd(), 'frontend', 'dist'),
+    join(process.cwd(), '..', 'frontend', 'dist'),
+    join(__dirname, '..', '..', 'frontend', 'dist'),
+    join(__dirname, '..', '..', '..', 'frontend', 'dist'),
+  ];
+  for (const candidate of candidates) {
+    if (existsSync(candidate) && existsSync(join(candidate, 'index.html'))) {
+      return candidate;
+    }
+  }
+  return null;
+}
+
+const frontendDistPath = resolveFrontendDist();
+const serveStaticModule = frontendDistPath
   ? [
       ServeStaticModule.forRoot({
         rootPath: frontendDistPath,

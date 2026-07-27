@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { AppException } from '@/shared/errors/app-exception';
-import { ResultInfo } from '@/shared/types/result-info';
+import { InfrastructureException } from '@/infrastructure/exceptions/infrastructure.exception';
 
 export class JwtAdapter {
   private readonly secret: string;
@@ -8,7 +7,7 @@ export class JwtAdapter {
 
   constructor() {
     if (!process.env.JWT_SECRET) {
-      throw new AppException(ResultInfo.InternalError('JWT_SECRET environment variable is not defined'));
+      throw new InfrastructureException('JWT_SECRET environment variable is not defined');
     }
     this.secret = process.env.JWT_SECRET;
   }

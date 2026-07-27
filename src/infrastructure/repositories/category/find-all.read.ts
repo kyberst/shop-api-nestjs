@@ -1,9 +1,7 @@
 import { Category } from '@/domain/entities/category.entity';
 import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
-import { MongoCategory } from '@/infrastructure/persistence/mongo/category.model';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
-import { AppException } from '@/shared/errors/app-exception';
-import { CategoryResultCode } from '@/application/constants/result-codes/category-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 
 /**
  * Fragmented logic to find all active categories.
@@ -11,16 +9,18 @@ import { CategoryResultCode } from '@/application/constants/result-codes/categor
 export const findAllCategoriesLogic = async (
   mongoose: MongooseService
 ): Promise<Category[]> => {
+  const CategoryModel = mongoose.getModel('Category');
+
   const mongoResult = await dbGuard(mongoose, () =>
-    MongoCategory.find({ isActive: true }, { id: 1, name: 1, isActive: 1, _id: 0 }).lean()
+    CategoryModel.find({ isActive: true }, { id: 1, name: 1, isActive: 1, _id: 0 }).lean()
   );
 
   if (mongoResult.ok) {
-    return (mongoResult.value || []) as Category[];
+    return (mongoResult.value || []) as unknown as Category[];
   }
 
-  throw new AppException(
-    CategoryResultCode.CATEGORIES_FETCH_FAILED,
-    `Mongo error: ${mongoResult.error?.message}`
+  throw new DatabaseException(
+    `Mongo error fetching categories: ${mongoResult.error?.message}`,
+    mongoResult.error
   );
 };

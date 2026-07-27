@@ -1,4 +1,4 @@
-import { OrderRepository } from '@/domain/repositories/order.repository';
+import { OrderQueryRepository } from '@/domain/repositories/order.query.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { IRequestHandler } from '@/application/mediator/interfaces';
 import { RequestHandler } from '@/application/mediator/decorators';
@@ -11,7 +11,7 @@ import { OrderResponseDto } from '@/application/dtos/response/orders/order.respo
 @RequestHandler(FindAllOrdersQuery)
 export class FindAllOrdersHandler implements IRequestHandler<FindAllOrdersQuery, ApiResult<PaginatedData<OrderResponseDto>>> {
   constructor(
-    private readonly orderRepository: OrderRepository
+    private readonly orderRepository: OrderQueryRepository
   ) {}
 
   async handle(command: FindAllOrdersQuery): Promise<ApiResult<PaginatedData<OrderResponseDto>>> {

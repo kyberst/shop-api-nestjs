@@ -1,4 +1,4 @@
-import { CategoryRepository } from '@/domain/repositories/category.repository';
+import { CategoryQueryRepository } from '@/domain/repositories/category.query.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { IRequestHandler } from '@/application/mediator/interfaces';
 import { RequestHandler } from '@/application/mediator/decorators';
@@ -10,7 +10,7 @@ import { CategoryResponseDto } from '@/application/dtos/response/categories/cate
 @RequestHandler(FindAllCategoriesQuery)
 export class FindAllCategoriesHandler implements IRequestHandler<FindAllCategoriesQuery, ApiResult<CategoryResponseDto[]>> {
   constructor(
-    private readonly categoryRepository: CategoryRepository
+    private readonly categoryRepository: CategoryQueryRepository
   ) {}
 
   async handle(command: FindAllCategoriesQuery): Promise<ApiResult<CategoryResponseDto[]>> {

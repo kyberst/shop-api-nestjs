@@ -15,8 +15,7 @@ import { ProductUpdatedConsumer } from '@/infrastructure/services/messaging/kafk
 import { ProductRemovedConsumer } from '@/infrastructure/services/messaging/kafka/consumers/product/product-removed.consumer';
 import { AiModule } from '@/infrastructure/modules/ai.module';
 import { ProductRepository } from '@/domain/repositories/product.repository';
-import { AdminProductRepository } from '@/domain/repositories/admin-product.repository';
-import { StoreProductRepository } from '@/domain/repositories/store-product.repository';
+import { ProductQueryRepository } from '@/domain/repositories/product.query.repository';
 import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.interface';
 import { IVectorDatabaseService } from '@/application/interfaces/ai/vector-database.interface';
 
@@ -53,17 +52,17 @@ import { IVectorDatabaseService } from '@/application/interfaces/ai/vector-datab
     },
     {
       provide: FindAllProductsHandler,
-      useFactory: (repo: StoreProductRepository) => {
+      useFactory: (repo: ProductQueryRepository) => {
         return new FindAllProductsHandler(repo);
       },
-      inject: [StoreProductRepository],
+      inject: [ProductQueryRepository],
     },
     {
       provide: FindAllProductsAdminHandler,
-      useFactory: (repo: AdminProductRepository) => {
+      useFactory: (repo: ProductQueryRepository) => {
         return new FindAllProductsAdminHandler(repo);
       },
-      inject: [AdminProductRepository],
+      inject: [ProductQueryRepository],
     },
     ProductCreatedConsumer,
     ProductUpdatedConsumer,

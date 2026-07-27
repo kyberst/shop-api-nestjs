@@ -2,8 +2,7 @@ import { User } from '@/domain/entities/user.entity';
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { AppException } from '@/shared/errors/app-exception';
-import { IdentityResultCode } from '@/application/constants/result-codes/identity-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 
 /**
  * Fragmented logic to save a user in the database.
@@ -32,9 +31,9 @@ export const saveUserLogic = async (
   );
 
   if (!result.ok) {
-    throw new AppException(
-      IdentityResultCode.USER_FETCH_FAILED, 
-      result.error?.message || 'Failed to save user'
+    throw new DatabaseException(
+      result.error?.message || 'Failed to save user in database',
+      result.error
     );
   }
 

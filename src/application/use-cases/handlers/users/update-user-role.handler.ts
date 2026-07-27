@@ -29,8 +29,8 @@ export class UpdateUserRoleHandler implements IRequestHandler<UpdateUserRoleComm
       return ApiResult.FromInfo(UserResultCode.CLIENT_ROLE_IMMUTABLE);
     }
 
-    user.role = command.role;
-    await this.userRepository.save(user);
+    const updatedUser = user.updateRole(command.role);
+    await this.userRepository.save(updatedUser);
 
     return ApiResult.FromInfo(UserResultCode.ROLE_UPDATED);
   }

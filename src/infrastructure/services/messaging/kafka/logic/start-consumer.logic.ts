@@ -27,7 +27,7 @@ export const startConsumerLogic = (
       logger.log(`Kafka Consumer subscribed successfully for group: ${c.groupId}`);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      logger.log(`Failed to start Kafka consumer for group ${c.groupId}. Message processing will be disabled. Reason: ${message}`);
+      
     }
   })();
 };

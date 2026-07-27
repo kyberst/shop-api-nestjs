@@ -1,8 +1,7 @@
-import { User } from '@/domain/entities/user.entity';
+import { User, UserRoleType } from '@/domain/entities/user.entity';
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
-import { AppException } from '@/shared/errors/app-exception';
-import { IdentityResultCode } from '@/application/constants/result-codes/identity-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 
 /**
  * Fragmented logic to find a user by email for internal operations.
@@ -17,19 +16,28 @@ export const findUserByEmailInternalLogic = async (
   const result = await dbGuard(prisma, () => 
     prisma.user.findUnique({ 
       where: { email: sanitizedEmail },
-      select: { id: true, email: true, name: true, password: true, role: true }
+      select: { id: true, email: true, name: true, password: true, role: true, createdAt: true, updatedAt: true }
     })
   );
 
   if (!result.ok) {
-    throw new AppException(
-      IdentityResultCode.USER_FETCH_FAILED, 
-      result.error?.message || 'Internal database error'
+    throw new DatabaseException(
+      result.error?.message || 'Internal database error finding user by email',
+      result.error
     );
   }
 
   if (result.value) {
-    return result.value as User;
+    const raw = result.value;
+    return User.create({
+      id: raw.id,
+      email: raw.email,
+      name: raw.name || '',
+      role: raw.role as UserRoleType,
+      password: raw.password ?? undefined,
+      createdAt: raw.createdAt,
+      updatedAt: raw.updatedAt,
+    });
   }
 
   return null;

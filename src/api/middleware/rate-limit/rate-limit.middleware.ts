@@ -14,12 +14,13 @@ export class RateLimitMiddleware implements NestMiddleware {
     @Inject(RATE_LIMIT_STORE) private readonly store: any,
   ) {
     const isProduction = process.env.NODE_ENV === 'production';
+    const storeInstance = typeof this.store === 'function' ? this.store('rl:mw:') : this.store;
     this.limiter = createRateLimiter({
       windowMs: 15 * 60 * 1000, // 15 minutes
       max: isProduction ? 100 : 10000,
       message: 'Too many requests, please try again later',
       handler: rateLimitHandler(this.logger),
-      store: this.store,
+      store: storeInstance,
     });
   }
 

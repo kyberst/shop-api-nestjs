@@ -1,7 +1,6 @@
 import { Client } from '@opensearch-project/opensearch';
 import { Logger } from '@nestjs/common';
-import { AppException } from '@/shared/errors/app-exception';
-import { ResultInfo } from '@/shared/types/result-info';
+import { InfrastructureException } from '@/infrastructure/exceptions/infrastructure.exception';
 
 export const onModuleInitLogic = (logger: Logger, onConnect: () => void): Client | undefined => {
   const node = process.env.OPENSEARCH_NODE;
@@ -15,7 +14,7 @@ export const onModuleInitLogic = (logger: Logger, onConnect: () => void): Client
     const password = process.env.OPENSEARCH_PASSWORD;
 
     if (!username || !password) {
-      throw new AppException(ResultInfo.InternalError('OPENSEARCH_USERNAME or OPENSEARCH_PASSWORD not found but OPENSEARCH_NODE is defined'));
+      throw new InfrastructureException('OPENSEARCH_USERNAME or OPENSEARCH_PASSWORD not found but OPENSEARCH_NODE is defined');
     }
 
     const client = new Client({

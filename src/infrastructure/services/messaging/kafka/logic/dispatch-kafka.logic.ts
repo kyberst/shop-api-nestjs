@@ -1,7 +1,6 @@
 import { Producer } from 'kafkajs';
 import { LoggerService } from '@/domain/services/logger.service';
-import { AppException } from '@/shared/errors/app-exception';
-import { KafkaResultCode } from '@/shared/result-codes/kafka-result-codes';
+import { KafkaException } from '@/infrastructure/exceptions/kafka.exception';
 
 export const dispatchKafkaLogic = async (
   topic: string,
@@ -18,9 +17,9 @@ export const dispatchKafkaLogic = async (
     });
   } catch (err: any) {
     logger.error(`Failed to send message to topic ${topic} via Kafka: ${err.message}`, err.stack);
-    throw new AppException(KafkaResultCode.KAFKA_CONNECTION_FAILED, {
-      message: `Failed to send message to topic ${topic} via Kafka`,
-      error: err.message,
-    });
+    throw new KafkaException(
+      `Failed to send message to topic ${topic} via Kafka: ${err.message}`,
+      err
+    );
   }
 };

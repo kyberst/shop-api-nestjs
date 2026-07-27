@@ -1,6 +1,6 @@
 import { Product } from '@/domain/entities/product.entity';
 
-export const productsPart2: Product[] = [
+export const productsPart2: any[] = [
   {
     id: 'prod-11',
     name: 'Smart LED Intelligent Controller Hub',

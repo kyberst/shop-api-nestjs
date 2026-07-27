@@ -1,20 +1,25 @@
-import { User } from '@/domain/entities/user.entity';
+import { User, UserRoleType } from '@/domain/entities/user.entity';
 
 /**
- * Maps a database user object (Prisma or Mongo) to the domain User entity.
- * This guarantees separation of concerns and keeps infrastructure mappings decoupled.
+ * Maps a raw database user record to a domain User entity.
+ * This ensures the object has access to domain-specific methods like validate(), isAdmin(), etc.,
+ * resolving TypeScript errors caused by returning plain objects.
  * 
- * @param rawUser - The raw database user record.
- * @returns The structured domain User entity.
+ * @param user - The raw user data from the persistence layer.
+ * @returns A proper domain User entity.
  */
-export const toDomainUser = (rawUser: any): User => {
-  return {
-    id: rawUser.id,
-    email: rawUser.email,
-    name: rawUser.name || '',
-    role: (rawUser.role as 'admin' | 'sales' | 'user') || 'user',
-    password: rawUser.password || undefined,
-    createdAt: rawUser.createdAt,
-    updatedAt: rawUser.updatedAt,
-  };
+export const toDomainUser = (user: any): User => {
+  if (!user) {
+    throw new Error('[toDomainUser] Cannot map null or undefined database record to domain User');
+  }
+
+  return User.create({
+    id: user.id,
+    email: user.email,
+    name: user.name || '',
+    role: user.role as UserRoleType,
+    password: user.password ?? undefined,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  });
 };

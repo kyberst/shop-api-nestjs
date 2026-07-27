@@ -7,6 +7,7 @@ import { RolePermissionsController } from '@/api/controllers/permissions/role-pe
 import { RolePermissionsUpdatedConsumer } from '@/infrastructure/services/messaging/kafka/consumers/permissions/role-permissions-updated.consumer';
 
 import { RolePermissionRepository } from '@/domain/repositories/role-permission.repository';
+import { RolePermissionQueryRepository } from '@/domain/repositories/role-permission.query.repository';
 import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.interface';
 
 @Module({
@@ -15,10 +16,10 @@ import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.inte
   providers: [
     {
       provide: GetRolePermissionsHandler,
-      useFactory: (repo: RolePermissionRepository) => {
+      useFactory: (repo: RolePermissionQueryRepository) => {
         return new GetRolePermissionsHandler(repo);
       },
-      inject: [RolePermissionRepository],
+      inject: [RolePermissionQueryRepository],
     },
     {
       provide: UpdateRolePermissionsHandler,

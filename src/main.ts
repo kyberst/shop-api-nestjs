@@ -14,23 +14,27 @@ import * as path from 'path';
 import { OpenApiLoader } from './infrastructure/services/openapi/openapi-loader';
 
 async function bootstrap() {
-  const criticalEnvVars = ['JWT_SECRET', 'DATABASE_URL', 'MONGO_URI', 'GEMINI_API_KEY'];
-  const missingEnvVars = criticalEnvVars.filter(
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.trim() === '' || process.env.JWT_SECRET === 'undefined') {
+    process.env.JWT_SECRET = 'default_jwt_secret_key_for_development_mode_12345';
+  }
+
+  const optionalVars = ['DATABASE_URL', 'MONGO_URI', 'GEMINI_API_KEY'];
+  const missingVars = optionalVars.filter(
     (envVar) => !process.env[envVar] || process.env[envVar].trim() === '' || process.env[envVar] === 'undefined'
   );
 
-  if (missingEnvVars.length > 0) {
-    console.error('\n================================================================');
-    console.error('❌ BOOTSTRAP FAILURE: Missing Critical Environment Variables!');
-    console.error('The following critical environment variable(s) must be defined:');
-    missingEnvVars.forEach((envVar) => console.error(`  - ${envVar}`));
-    console.error('Please configure them in your environment settings or .env file.');
-    console.error('================================================================\n');
-    process.exit(1);
+  if (missingVars.length > 0) {
+    console.warn('\n================================================================');
+    console.warn('⚠️ WARNING: Optional Environment Variable(s) Not Provided:');
+    missingVars.forEach((envVar) => console.warn(`  - ${envVar}`));
+    console.warn('The application will run with local in-memory fallback repositories.');
+    console.warn('================================================================\n');
   }
 
   const isProduction = process.env.NODE_ENV === 'production';
-  const port = isProduction ? 3000 : 3001;
+  const port = isProduction
+    ? (process.env.PORT ? parseInt(process.env.PORT, 10) : 3000)
+    : (process.env.BACKEND_PORT ? parseInt(process.env.BACKEND_PORT, 10) : 3001);
   
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true,

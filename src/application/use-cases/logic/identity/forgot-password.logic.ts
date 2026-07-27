@@ -20,8 +20,9 @@ export const forgotPasswordLogic = async (
   }
 
   if (newPassword) {
-    user.password = await hashService.hash(newPassword);
-    await userRepository.save(user);
+    const hashedPassword = await hashService.hash(newPassword);
+    const updatedUser = user.updatePassword(hashedPassword);
+    await userRepository.save(updatedUser);
   }
 
   return ApiResult.FromInfo(IdentityResultCode.FORGOT_PASSWORD_SUCCESS);

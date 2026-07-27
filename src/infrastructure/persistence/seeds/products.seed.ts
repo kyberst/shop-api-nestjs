@@ -14,7 +14,7 @@ function ensureUuid(id: string): string {
   return id;
 }
 
-const rawProducts: Product[] = [
+const rawProducts: any[] = [
   ...productsPart1,
   ...productsPart2,
   ...productsPart3,
@@ -22,7 +22,7 @@ const rawProducts: Product[] = [
   ...productsPart5
 ];
 
-export const seedProducts: Product[] = rawProducts.map(p => ({
+export const seedProducts: Product[] = rawProducts.map(p => Product.create({
   ...p,
   id: ensureUuid(p.id)
 }));

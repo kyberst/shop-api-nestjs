@@ -7,6 +7,7 @@ import { CreateCategoryRequestDto } from '@/application/dtos/request/categories/
 import { CategoryResponseDto } from '@/application/dtos/response/categories/category.response.dto';
 import { Category } from '@/domain/entities/category.entity';
 import { CategoryMapper } from '@/application/mappers/category.mapper';
+import { executeRepository } from '@/application/helpers/execute-repository.helper';
 
 /**
  * Logic to create a category with complex business rules.
@@ -26,13 +27,16 @@ export async function createCategoryLogic(
     return ApiResult.FromInfo(CategoryResultCode.CATEGORY_NAME_DUPLICATED);
   }
 
-  const category: Category = {
+  const category = Category.create({
     id: dto.id || randomUUID(),
     name: dto.name,
     isActive: true,
-  };
+  });
 
-  await repository.save(category);
+  await executeRepository(
+    () => repository.save(category),
+    CategoryResultCode.CATEGORY_CREATION_FAILED
+  );
 
   return ApiResult.FromInfo(CategoryResultCode.CATEGORY_CREATED, CategoryMapper.toResponse(category));
 }

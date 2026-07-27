@@ -39,6 +39,15 @@ export class MongooseService implements OnModuleInit, OnModuleDestroy {
     return mongoose.connection.readyState === 1;
   }
 
+  /**
+   * Returns a Mongoose model by name.
+   * This allows logic fragments to use the injected service instance 
+   * instead of global model imports.
+   */
+  getModel<T>(name: string): mongoose.Model<T> {
+    return mongoose.model<T>(name);
+  }
+
   async onModuleDestroy() {
     await mongoose.disconnect();
   }

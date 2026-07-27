@@ -1,6 +1,6 @@
 import { Product } from '@/domain/entities/product.entity';
 
-export const productsPart5: Product[] = [
+export const productsPart5: any[] = [
   {
     id: 'prod-41',
     name: 'Smart Wi-Fi Thermostat Control',

@@ -2,8 +2,7 @@ import { Product } from '@/domain/entities/product.entity';
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { AppException } from '@/shared/errors/app-exception';
-import { ProductResultCode } from '@/application/constants/result-codes/product-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 
 /**
  * Fragmented logic to update a product.
@@ -30,8 +29,8 @@ export const updateProductLogic = async (
     return { affectedCount };
   }
 
-  throw new AppException(
-    ProductResultCode.PRODUCT_UPDATE_FAILED,
-    `Prisma error: ${prismaResult.error?.message}`
+  throw new DatabaseException(
+    `Prisma error updating product: ${prismaResult.error?.message}`,
+    prismaResult.error
   );
 };

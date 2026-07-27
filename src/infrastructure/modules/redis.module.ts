@@ -15,7 +15,7 @@ import { createRateLimitStore } from '@/infrastructure/security/rate-limit/rate-
     {
       provide: RATE_LIMIT_STORE,
       useFactory: (cache: CacheService) => {
-        return createRateLimitStore(cache.getClient());
+        return (prefix = 'rl:') => createRateLimitStore(cache.getClient(), prefix);
       },
       inject: [CacheService],
     },

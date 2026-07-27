@@ -12,6 +12,7 @@ import { CategoryCreatedConsumer } from '@/infrastructure/services/messaging/kaf
 import { CategoryUpdatedConsumer } from '@/infrastructure/services/messaging/kafka/consumers/category/category-updated.consumer';
 import { CategoryRemovedConsumer } from '@/infrastructure/services/messaging/kafka/consumers/category/category-removed.consumer';
 import { CategoryRepository } from '@/domain/repositories/category.repository';
+import { CategoryQueryRepository } from '@/domain/repositories/category.query.repository';
 import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.interface';
 
 @Module({
@@ -46,10 +47,10 @@ import { MessageBroker } from '@/shared/interfaces/messaging/message-broker.inte
     },
     {
       provide: FindAllCategoriesHandler,
-      useFactory: (repo: CategoryRepository) => {
+      useFactory: (repo: CategoryQueryRepository) => {
         return new FindAllCategoriesHandler(repo);
       },
-      inject: [CategoryRepository],
+      inject: [CategoryQueryRepository],
     },
     CategoryCreatedConsumer,
     CategoryUpdatedConsumer,

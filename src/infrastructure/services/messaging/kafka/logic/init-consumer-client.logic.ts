@@ -1,8 +1,6 @@
 import { Kafka, logLevel } from 'kafkajs';
 import { LoggerService } from '@/domain/services/logger.service';
 import { parseBrokersLogic } from './parse-brokers.logic';
-import { AppException } from '@/shared/errors/app-exception';
-import { KafkaResultCode } from '@/shared/result-codes/kafka-result-codes';
 
 export const initConsumerClientLogic = (logger: LoggerService): Kafka | undefined => {
   if (!process.env.KAFKA_BROKER || 

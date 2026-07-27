@@ -4,8 +4,7 @@ import { CacheService } from '@/shared/interfaces/cache/cache.interface';
 import { onModuleInitLogic } from './logic/on-module-init.logic';
 import { onModuleDestroyLogic } from './logic/on-module-destroy.logic';
 import { isConnectedLogic } from './logic/is-connected.logic';
-import { AppException } from '@/shared/errors/app-exception';
-import { ResultInfo } from '@/shared/types/result-info';
+import { InfrastructureException } from '@/infrastructure/exceptions/infrastructure.exception';
 
 @Injectable()
 export class RedisService extends CacheService implements OnModuleInit, OnModuleDestroy {
@@ -27,7 +26,7 @@ export class RedisService extends CacheService implements OnModuleInit, OnModule
 
   getClient(): Redis {
     if (!this.client) {
-      throw new AppException(ResultInfo.InternalError('Redis client not initialized'));
+      throw new InfrastructureException('Redis client not initialized');
     }
     return this.client;
   }

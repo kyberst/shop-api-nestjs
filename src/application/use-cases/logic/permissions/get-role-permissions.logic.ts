@@ -1,11 +1,11 @@
-import { RolePermissionRepository } from '@/domain/repositories/role-permission.repository';
+import { RolePermissionQueryRepository } from '@/domain/repositories/role-permission.query.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { PermissionResultCode } from '@/application/constants/result-codes/permission-result-codes';
 import { RolePermissionResponseDto } from '@/application/dtos/response/permissions/role-permission.response.dto';
 import { PermissionMapper } from '@/application/mappers/permission.mapper';
 
 export const getRolePermissionsLogic = async (
-  rolePermissionRepository: RolePermissionRepository,
+  rolePermissionRepository: RolePermissionQueryRepository,
 ): Promise<ApiResult<RolePermissionResponseDto[]>> => {
   try {
     const permissions = await rolePermissionRepository.findAll();

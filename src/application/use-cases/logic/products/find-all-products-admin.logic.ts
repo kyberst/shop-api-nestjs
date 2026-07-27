@@ -1,4 +1,4 @@
-import { AdminProductRepository } from '@/domain/repositories/admin-product.repository';
+import { ProductQueryRepository } from '@/domain/repositories/product.query.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { ProductResultCode } from '@/application/constants/result-codes/product-result-codes';
 import { ProductQueryOptions } from '@/domain/interfaces/product-query-options.interface';
@@ -10,7 +10,7 @@ import { ProductMapper } from '@/application/mappers/product.mapper';
  * Logic to find all products for administrators.
  */
 export const findAllProductsAdminLogic = async (
-  adminProductRepository: AdminProductRepository,
+  adminProductRepository: ProductQueryRepository,
   options?: ProductQueryOptions
 ): Promise<ApiResult<PaginatedData<ProductResponseDto>>> => {
   const productsResult = await adminProductRepository.findAll(options);

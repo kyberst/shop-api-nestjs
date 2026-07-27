@@ -1,4 +1,4 @@
-import { OrderRepository } from '@/domain/repositories/order.repository';
+import { OrderQueryRepository } from '@/domain/repositories/order.query.repository';
 import { ApiResult } from '@/shared/types/api-result';
 import { OrderResultCode } from '@/application/constants/result-codes/order-result-codes';
 import { OrderQueryOptions } from '@/domain/interfaces/order-query-options.interface';
@@ -11,7 +11,7 @@ import { OrderMapper } from '@/application/mappers/order.mapper';
  * Logic to find all orders with filters and pagination.
  */
 export const findAllOrdersLogic = async (
-  orderRepository: OrderRepository,
+  orderRepository: OrderQueryRepository,
   options?: OrderQueryOptions,
   currentUser?: RequestUser
 ): Promise<ApiResult<PaginatedData<OrderResponseDto>>> => {

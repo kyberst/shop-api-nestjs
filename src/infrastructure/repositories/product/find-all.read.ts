@@ -1,10 +1,7 @@
 import { Product } from '@/domain/entities/product.entity';
 import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
-import { MongoProduct } from '@/infrastructure/persistence/mongo/product.model';
-import { MongoCategory } from '@/infrastructure/persistence/mongo/category.model';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
-import { AppException } from '@/shared/errors/app-exception';
-import { ProductResultCode } from '@/application/constants/result-codes/product-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 import { ProductQueryOptions } from '@/domain/interfaces/product-query-options.interface';
 
 /**
@@ -14,6 +11,9 @@ export const findAllProductsLogic = async (
   mongoose: MongooseService,
   options?: ProductQueryOptions
 ): Promise<{ items: Product[]; total: number }> => {
+  const ProductModel = mongoose.getModel('Product');
+  const CategoryModel = mongoose.getModel('Category');
+
   const mongoResult = await dbGuard(mongoose, async () => {
     const query: any = {};
     
@@ -21,8 +21,8 @@ export const findAllProductsLogic = async (
       query.isActive = true;
       
       // Also filter by active categories
-      const activeCategories = await MongoCategory.find({ isActive: true }, { name: 1, _id: 0 }).lean();
-      const activeCategoryNames = (activeCategories || []).map(c => c.name);
+      const activeCategories = await CategoryModel.find({ isActive: true }, { name: 1, _id: 0 }).lean();
+      const activeCategoryNames = (activeCategories || []).map(c => (c as any).name);
       
       if (options?.category && options.category !== 'All') {
         if (activeCategoryNames.includes(options.category)) {
@@ -70,7 +70,7 @@ export const findAllProductsLogic = async (
       }
     }
 
-    const mQuery = MongoProduct.find(
+    const mQuery = ProductModel.find(
       query,
       { 
         id: 1, name: 1, description: 1, price: 1, category: 1, 
@@ -89,19 +89,19 @@ export const findAllProductsLogic = async (
 
     const [items, total] = await Promise.all([
       mQuery.lean(),
-      MongoProduct.countDocuments(query)
+      ProductModel.countDocuments(query)
     ]);
 
-    return { items: items as Product[], total };
+    return { items: items as unknown as Product[], total };
   });
 
   if (mongoResult.ok) {
     return mongoResult.value;
   }
 
-  throw new AppException(
-    ProductResultCode.PRODUCTS_FETCH_FAILED,
-    `Mongo error: ${mongoResult.error?.message}`
+  throw new DatabaseException(
+    `Mongo error fetching products: ${mongoResult.error?.message}`,
+    mongoResult.error
   );
 };
 

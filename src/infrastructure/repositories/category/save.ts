@@ -2,8 +2,7 @@ import { Category } from '@/domain/entities/category.entity';
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { AppException } from '@/shared/errors/app-exception';
-import { CategoryResultCode } from '@/application/constants/result-codes/category-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 
 /**
  * Fragmented logic to save a category.
@@ -20,8 +19,8 @@ export const saveCategoryLogic = async (
     return { affectedCount: 1 };
   }
 
-  throw new AppException(
-    CategoryResultCode.CATEGORY_CREATION_FAILED, 
-    `Prisma error: ${prismaResult.error?.message}`
+  throw new DatabaseException(
+    `Prisma error creating category: ${prismaResult.error?.message}`,
+    prismaResult.error
   );
 };

@@ -1,8 +1,7 @@
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
 import { dbGuard } from '@/infrastructure/persistence/db-guard';
 import { MutationSummary } from '@/domain/types/mutation-summary';
-import { AppException } from '@/shared/errors/app-exception';
-import { ProductResultCode } from '@/application/constants/result-codes/product-result-codes';
+import { DatabaseException } from '@/infrastructure/exceptions/database.exception';
 
 /**
  * Fragmented logic to soft delete a product.
@@ -20,8 +19,8 @@ export const deleteProductLogic = async (
     return { affectedCount };
   }
 
-  throw new AppException(
-    ProductResultCode.PRODUCT_DELETION_FAILED,
-    `Prisma error: ${prismaResult.error?.message}`
+  throw new DatabaseException(
+    `Prisma error deleting product: ${prismaResult.error?.message}`,
+    prismaResult.error
   );
 };

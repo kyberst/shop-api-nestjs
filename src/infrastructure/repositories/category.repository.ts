@@ -3,8 +3,6 @@ import { CategoryRepository as DomainCategoryRepository } from '@/domain/reposit
 import { Category } from '@/domain/entities/category.entity';
 import { MutationSummary } from '@/domain/types/mutation-summary';
 import { PrismaService } from '@/infrastructure/persistence/prisma.service';
-import { MongooseService } from '@/infrastructure/persistence/mongoose.service';
-import { findAllCategoriesLogic } from './category/find-all.read';
 import { saveCategoryLogic } from './category/save';
 import { updateCategoryLogic } from './category/update';
 import { deleteCategoryLogic } from './category/delete';
@@ -14,13 +12,8 @@ import { findCategoryByNameLogic } from './category/find-by-name.internal';
 export class CategoryRepository extends DomainCategoryRepository {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly mongoose: MongooseService,
   ) {
     super();
-  }
-
-  async findAll(): Promise<Category[]> {
-    return findAllCategoriesLogic(this.mongoose);
   }
 
   async findByName(name: string): Promise<Category | null> {

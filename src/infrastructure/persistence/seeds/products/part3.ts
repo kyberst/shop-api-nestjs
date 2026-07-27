@@ -1,6 +1,6 @@
 import { Product } from '@/domain/entities/product.entity';
 
-export const productsPart3: Product[] = [
+export const productsPart3: any[] = [
   {
     id: 'prod-21',
     name: 'Commercial Air Purifier with HEPA Filter',
